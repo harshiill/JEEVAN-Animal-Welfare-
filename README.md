@@ -13,6 +13,7 @@ An AI-powered platform for image-based animal disease detection and real-time re
 - **Zod** for schema validation
 - **bcryptjs** for password hashing
 - **Multer** for image upload handling
+- **JWT** for token creation & verification during login,logout..
 - **Firebase FCM**, **Socket.IO** (real-time and notifications - planned)
 
 ---
