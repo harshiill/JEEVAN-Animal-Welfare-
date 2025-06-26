@@ -56,7 +56,7 @@ Answer prompts as follows:
 ### 3. 📦 Install Dependencies
 
 ```bash
-npm install mongoose cloudinary dotenv zod bcryptjs multer
+npm install mongoose cloudinary dotenv zod bcryptjs multer jsonwebtoken
 ```
 
 ---
