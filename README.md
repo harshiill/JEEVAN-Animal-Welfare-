@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# 🐾 Jeevan - Animal Welfare App
 
-First, run the development server:
+An AI-powered platform for image-based animal disease detection and real-time reporting of injured or stray animals. Built with **Next.js**, **MongoDB**, **Cloudinary**, and **Zod**.
+
+---
+
+## 📦 Tech Stack
+
+- **Next.js** (App Router, TypeScript, Tailwind CSS)
+- **MongoDB Atlas** with Mongoose
+- **Cloudinary** for image uploads
+- **Zod** for schema validation
+- **bcryptjs** for password hashing
+- **Multer** for image upload handling
+- **Firebase FCM**, **Socket.IO** (real-time and notifications - planned)
+
+---
+
+## 🚀 Initial Setup Guide
+
+Follow these steps to set up the project locally.
+
+---
+
+### 1. 📁 Create Project Folder
+
+```bash
+mkdir jeevan
+cd jeevan
+```
+
+---
+
+### 2. 🧱 Scaffold the Project (Next.js)
+
+```bash
+npx create-next-app@latest .
+```
+
+Answer prompts as follows:
+
+```
+✔ Would you like to use TypeScript?              » Yes
+✔ Would you like to use ESLint?                 » Yes
+✔ Would you like to use Tailwind CSS?           » Yes
+✔ Would you like your code inside a `src/` dir? » Yes
+✔ Would you like to use App Router?             » Yes
+✔ Would you like to use Turbopack?              » No
+✔ Customize the import alias?                   » No
+```
+
+---
+
+### 3. 📦 Install Dependencies
+
+```bash
+npm install mongoose cloudinary dotenv zod bcryptjs multer
+```
+
+---
+
+### 4. 🔐 Setup Environment Variables
+
+Create a `.env.` file in the root based on the sample:
+
+```bash
+cp .env.sample .env
+```
+
+#### Example `.env.sample` contents:
+```
+MONGO_URI=
+TOKEN_SECRET=
+DOMAIN=http://localhost:3000
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_secret
+```
+
+---
+
+### 5. 🧠 Project Structure (Basic)
+
+```
+/src
+  ├── /app
+  ├── /components
+  ├── /lib        # db.ts, cloudinary.ts
+  ├── /models     # mongoose schemas
+  ├── /middleware.ts        # Middleware
+  ├── /helpers       # utils
+  ├── /Schemas       # ZOD Schema Validations
+.env
+.env.sample
+```
+
+---
+
+### 6. ✅ Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## 🤝 Contributing
 
-To learn more about Next.js, take a look at the following resources:
+Pull requests welcome! If you're looking to contribute, please fork the repo and open a PR.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📄 License
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+IIITDMJ © 2025 Jeevan Project
