@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   await dbConnect();
 
   try {
-    const { name, email, password } = await req.json();
+    const { name, email, password, profilePicture } = await req.json();
 
     if (!name || !email || !password) {
       return NextResponse.json(
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     expiryDate.setHours(expiryDate.getHours() + 1); // 1 hour expiry
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
+    
     if (existingUser) {
       if (existingUser.isVerified) {
         return NextResponse.json(
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
         resetPasswordToken: "",
         resetPasswordExpires: null,
         availabilityRadius: 0,
-        profilePicture: "",
+        profilePicture,
         location: {
           type: "Point",
           coordinates: [0, 0],
