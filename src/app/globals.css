@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
 
 :root {
   --background: #ffffff;
@@ -14,8 +16,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #f0e8e8;
+    --foreground: #3a1717;
   }
 }
 

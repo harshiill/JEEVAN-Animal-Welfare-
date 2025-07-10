@@ -1,4 +1,4 @@
-import HomePageClient from "./_components/Donation/DonationPage";
+import HomePageClient from "./_components/Home/HomePageClient";
 
 export default function Page() {
   return <HomePageClient />;

@@ -1,153 +1,128 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import RescueMap from "./RescueMapWrapper";
 
-const mockData = [
-  {
-    id: 1,
-    image: "/Rescue/inj-dog.png",
-    title: "Dog found near park",
-    time: "Reported 2 hours ago",
-    address: "123 Elm Street, San Francisco",
-  },
-  {
-    id: 2,
-    image: "/Rescue/cat-stuck.png",
-    title: "Cat stuck in tree",
-    time: "Reported 3 hours ago",
-    address: "456 Oak Avenue, San Francisco",
-  },
-  {
-    id: 3,
-    image: "/Rescue/inj-bird.png",
-    title: "Injured bird",
-    time: "Reported 4 hours ago",
-    address: "789 Pine Lane, San Francisco",
-  },
-  {
-    id: 4,
-    image: "/Rescue/puppy.png",
-    title: "Lost puppy",
-    time: "Reported 5 hours ago",
-    address: "101 Maple Drive, San Francisco",
-  },
-  {
-    id: 5,
-    image: "/Rescue/str-rabbit.png",
-    title: "Stray rabbit",
-    time: "Reported 6 hours ago",
-    address: "222 Cedar Court, San Francisco",
-  },
-];
+interface Report {
+  _id: string;
+  imageUrl: string;
+  typeOfAnimal: string;
+  description: string;
+  status: "pending" | "in-progress" | "resolved";
+  location: {
+    coordinates: [number, number]; // [lng, lat]
+  };
+}
 
-export default function RescuePage() {
-  const [filter, setFilter] = useState("All");
-  const [sortBy, setSortBy] = useState("Newest");
+export default function RescuetaskPage() {
+  const [reports, setReports] = useState<Report[]>([]);
+
+  const fetchReports = async () => {
+    try {
+      const res = await fetch("/api/report-all");
+      const data = await res.json();
+      if (data.success) {
+        setReports(data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching reports:", error);
+    }
+  };
+
+  const markResolved = async (id: string) => {
+    try {
+      const res = await fetch(`/api/report/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "resolved" }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        fetchReports(); // refresh UI
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchReports();
+  }, []);
 
   return (
-    <main className="min-h-screen bg-white text-black font-sans">
-      {/* Navbar */}
-      <header className="flex justify-between items-center px-8 py-4 border-b">
-        <div className="text-xl font-bold flex items-center gap-2">
-          <span className="text-lg">🐾</span> Jeevan
-        </div>
-        <nav className="flex gap-6 items-center text-base font-medium">
-          <a href="/" className="hover:underline">Home</a>
-          <a href="/report" className="hover:underline">Report</a>
-          <a href="/rescue" className="hover:underline font-semibold">Rescue</a>
-          <a href="/about" className="hover:underline">About</a>
-          <div className="bg-gray-100 p-2 rounded-full">🔔</div>
-          <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-300">
-            <Image src="/profile-user.png" alt="User" width={32} height={32} />
-          </div>
-        </nav>
-      </header>
+    <div className="p-6 max-w-6xl mx-auto bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
+        🐾 Active Rescue Reports
+      </h1>
 
-      {/* Main Content - Full Width */}
-      <div className="flex flex-col lg:flex-row py-10 gap-10 px-6 md:px-10">
-        {/* Sidebar */}
-        <aside className="w-full lg:w-1/4 space-y-6">
-          <div>
-            <h2 className="text-xl font-bold mb-3">Nearby Cases</h2>
-            <div className="w-full h-48 bg-gray-100 rounded-lg overflow-hidden">
-              <Image
-                src="/map.png"
-                alt="Map"
-                width={300}
-                height={200}
-                className="object-cover w-full h-full"
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {reports.length === 0 && <p className="text-center">No reports available.</p>}
+
+        {reports.map((report) => {
+          const [lng, lat] = report.location.coordinates;
+
+          return (
+            <div
+              key={report._id}
+              className="bg-white rounded-2xl shadow-md p-4 flex flex-col border border-gray-200"
+            >
+              <img
+                src={report.imageUrl}
+                alt="animal"
+                className="w-full h-48 object-cover rounded-xl mb-3"
               />
-            </div>
-          </div>
 
-          <div>
-            <h3 className="text-md font-semibold mb-2">Filters</h3>
-            <div className="flex gap-2 flex-wrap">
-              {["All", "Urgent", "Rescued"].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => setFilter(item)}
-                  className={`px-4 py-1 rounded-full border text-sm ${
-                    filter === item ? "bg-[#00C4B4] text-white" : "bg-gray-100 text-black"
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-          </div>
+              <h2 className="text-xl font-semibold capitalize text-gray-800">
+                {report.typeOfAnimal}
+              </h2>
 
-          <div>
-            <h3 className="text-md font-semibold mb-2">Sort by</h3>
-            <div className="flex gap-2 flex-wrap">
-              {["Newest", "Distance"].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => setSortBy(item)}
-                  className={`px-4 py-1 rounded-full border text-sm ${
-                    sortBy === item ? "bg-[#00C4B4] text-white" : "bg-gray-100 text-black"
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-          </div>
-        </aside>
+              <p className="text-gray-600 text-sm mb-2">{report.description}</p>
 
-        {/* Reported Cases Section */}
-        <section className="w-full lg:w-3/4">
-          <h2 className="text-2xl font-bold mb-6">Reported Cases</h2>
+              <p className="text-sm text-gray-500 mb-2">
+                📍 Location: {lat.toFixed(4)}, {lng.toFixed(4)}
+              </p>
 
-          <div className="space-y-6">
-            {mockData.map((caseItem) => (
-              <div
-                key={caseItem.id}
-                className="flex items-center justify-between p-4 bg-[#f9f9f9] rounded-xl shadow-sm"
+              {/* 🔗 Google Maps link */}
+              <a
+                href={`https://www.google.com/maps?q=${lat},${lng}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 text-sm hover:underline mb-2"
               >
-                <div className="flex items-center gap-4">
-                  <Image
-                    src={caseItem.image}
-                    alt={caseItem.title}
-                    width={60}
-                    height={60}
-                    className="rounded-xl object-cover"
-                  />
-                  <div>
-                    <h3 className="font-semibold text-[16px]">{caseItem.title}</h3>
-                    <p className="text-gray-500 text-sm">{caseItem.time}</p>
-                    <p className="text-[#00A89D] text-sm font-medium">{caseItem.address}</p>
-                  </div>
-                </div>
-                <button className="bg-gray-100 hover:bg-gray-200 text-sm font-medium px-4 py-2 rounded-full">
-                  Accept
+                Open in Google Maps
+              </a>
+
+              {/* 🗺 Map preview */}
+              <RescueMap lat={lat} lng={lng} />
+
+              {/* 🟢 Status tag */}
+              <span
+                className={`mt-3 inline-block px-3 py-1 rounded-full text-xs font-semibold w-fit
+                  ${report.status === "pending"
+                    ? "bg-yellow-100 text-yellow-800"
+                    : report.status === "in-progress"
+                      ? "bg-blue-100 text-blue-800"
+                      : "bg-green-100 text-green-800"
+                  }
+                `}
+              >
+                {report.status.toUpperCase()}
+              </span>
+
+              {/* ✅ Mark Resolved Button */}
+              {report.status !== "resolved" && (
+                <button
+                  onClick={() => markResolved(report._id)}
+                  className="mt-3 bg-green-600 hover:bg-green-700 text-white text-sm py-1.5 px-4 rounded-xl transition"
+                >
+                  Mark as Resolved
                 </button>
-              </div>
-            ))}
-          </div>
-        </section>
+              )}
+            </div>
+          );
+        })}
       </div>
-    </main>
+    </div>
   );
 }
