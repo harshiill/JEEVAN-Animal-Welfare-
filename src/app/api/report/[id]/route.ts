@@ -2,18 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConfig";
 import { ReportModel } from "@/models/report.models";
 
+// Fix: Add explicit type for context parameter
 export async function PUT(
   req: NextRequest,
-  context: { params: { id: string } }
-) {
+  { params }: { params: { id: string } }
+): Promise<NextResponse> {
   await dbConnect();
 
   try {
-    const { id } = context.params;
     const { status } = await req.json();
 
     const updated = await ReportModel.findByIdAndUpdate(
-      id,
+      params.id,
       { status },
       { new: true }
     );
