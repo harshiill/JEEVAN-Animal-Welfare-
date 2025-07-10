@@ -1,19 +1,27 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextRequest, NextResponse } from "next/server";
+import type { NextApiRequest } from "next";
+import type { NextRequest as MiddlewareRequest } from "next/server"; // optional clarity
+import type { NextFetchEvent } from "next/server"; // optional
+
 import dbConnect from "@/lib/dbConfig";
 import { ReportModel } from "@/models/report.models";
 
-// Fix: Add explicit type for context parameter
+type Context = {
+  params: { id: string };
+};
+
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
-): Promise<NextResponse> {
+  context: Context
+) {
   await dbConnect();
 
   try {
     const { status } = await req.json();
 
     const updated = await ReportModel.findByIdAndUpdate(
-      params.id,
+      context.params.id,
       { status },
       { new: true }
     );
