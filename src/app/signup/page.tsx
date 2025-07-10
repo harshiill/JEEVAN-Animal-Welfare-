@@ -5,6 +5,7 @@
 import { useState } from "react";
 import { signUpSchema } from "@/Schemas/signUpSchema";
 import axios from "axios";
+import { useRouter } from 'next/navigation';
 
 export default function SignupPage() {
   const [form, setForm] = useState({
@@ -12,6 +13,7 @@ export default function SignupPage() {
     email: "",
     password: "",
   });
+  const router = useRouter();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [error, setError] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -59,6 +61,8 @@ export default function SignupPage() {
       });
 
       alert("Signup successful!");
+      router.push("/verify-code");
+      
     } catch (err: any) {
       console.error(err);
       setError(err?.response?.data?.message || err.message || "Something went wrong");
