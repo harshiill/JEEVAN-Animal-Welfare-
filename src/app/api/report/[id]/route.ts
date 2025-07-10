@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConfig";
 import { ReportModel } from "@/models/report.models";
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
     await dbConnect();
 
     try {
