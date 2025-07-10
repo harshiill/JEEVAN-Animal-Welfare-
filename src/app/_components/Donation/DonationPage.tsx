@@ -1,6 +1,8 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function DonatePage() {
@@ -28,10 +30,10 @@ export default function DonatePage() {
           <span className="text-lg">🐾</span> Jeevan
         </div>
         <nav className="flex gap-6 items-center text-base font-medium">
-          <a href="/" className="hover:underline">Home</a>
-          <a href="/about" className="hover:underline">About</a>
-          <a href="/contact" className="hover:underline">Contact</a>
-          <a href="/donate" className="bg-[#00C4B4] text-white px-4 py-2 rounded-full">Donate</a>
+          <Link href="/" className="hover:underline">Home</Link>
+          <Link href="/about" className="hover:underline">About</Link>
+          <Link href="/contact" className="hover:underline">Contact</Link>
+          <Link href="/donate" className="bg-[#00C4B4] text-white px-4 py-2 rounded-full">Donate</Link>
           <div className="bg-gray-100 p-2 rounded-full">🔔</div>
         </nav>
       </header>
