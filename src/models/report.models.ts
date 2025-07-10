@@ -18,7 +18,7 @@ export interface Report extends Document {
 
 const ReportSchema = new Schema<Report>(
   {
-    reporter: { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true },
+    reporter: { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: false },
     imageUrl: { type: String, required: true },
     typeOfAnimal: { type: String, required: true },
     description: { type: String, required: true },
