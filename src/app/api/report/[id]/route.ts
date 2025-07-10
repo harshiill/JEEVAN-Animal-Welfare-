@@ -4,20 +4,32 @@ import { ReportModel } from "@/models/report.models";
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-    await dbConnect();
+  await dbConnect();
 
-    try {
-        const { status } = await req.json();
-        const updated = await ReportModel.findByIdAndUpdate(params.id, { status }, { new: true });
+  try {
+    const { id } = context.params;
+    const { status } = await req.json();
 
-        if (!updated) {
-            return NextResponse.json({ success: false, message: "Report not found" }, { status: 404 });
-        }
+    const updated = await ReportModel.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
 
-        return NextResponse.json({ success: true, data: updated });
-    } catch (err) {
-        return NextResponse.json({ success: false, error: err }, { status: 500 });
+    if (!updated) {
+      return NextResponse.json(
+        { success: false, message: "Report not found" },
+        { status: 404 }
+      );
     }
+
+    return NextResponse.json({ success: true, data: updated });
+  } catch (err) {
+    return NextResponse.json(
+      { success: false, error: (err as Error).message },
+      { status: 500 }
+    );
+  }
 }
