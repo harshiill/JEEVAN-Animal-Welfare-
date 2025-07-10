@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 
 function Page() {
   const [form, setForm] = useState({
-    username: '',
+    email: '',
     code: '',
   });
     const router = useRouter();
@@ -24,7 +24,7 @@ function Page() {
     try {
       const res = await axios.post('/api/verify-code', form);
       setSuccess(res.data.message);
-        setForm({ username: '', code: '' }); // Reset form on success
+        setForm({ email: '', code: '' }); 
         alert('Verification successful! You can now log in.');
         router.push('/login');
     } catch (err: any) {
@@ -47,10 +47,10 @@ function Page() {
           <form className="max-w-md mx-auto" onSubmit={handleSubmit}>
             <input
               type="text"
-              name="username"
-              value={form.username}
-              onChange={(e) => setForm({ ...form, username: e.target.value })}
-              placeholder="Enter your username"
+              name="email"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              placeholder="Enter your email"
               className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#00C4B4] mb-4"
               required
             />

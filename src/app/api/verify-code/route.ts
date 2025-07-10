@@ -5,18 +5,18 @@ import { UserModel } from "@/models/user.models";
 export async function POST(request: NextRequest) {
   await dbConnect();
   try {
-    const { username, code } = await request.json();
+    const { email, code } = await request.json();
 
-    const decodedUsername = decodeURIComponent(username);
+    const decodedemail = decodeURIComponent(email);
 
-    if (!username || !code) {
+    if (!email || !code) {
       return NextResponse.json(
-        { success: false, message: "Username and code are required." },
+        { success: false, message: "email and code are required." },
         { status: 400 }
       );
     }
 
-    const user = await UserModel.findOne({ username: decodedUsername });
+    const user = await UserModel.findOne({ email: decodedemail });
 
     if (!user) {
       return NextResponse.json(
