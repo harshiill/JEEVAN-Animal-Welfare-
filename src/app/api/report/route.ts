@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextResponse } from "next/server";
+import { NextResponse,NextRequest } from "next/server";
 import dbConnect from "@/lib/dbConfig";
 import { ReportModel } from "@/models/report.models";
+import { getDataFromToken } from "@/helpers/getDataFromToken";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
     await dbConnect();
 
     try {
@@ -15,8 +16,14 @@ export async function POST(req: Request) {
             return NextResponse.json({ success: false, error: "Missing fields" }, { status: 400 });
         }
 
+        const reporterId = await getDataFromToken(req);
+        if (!reporterId) {
+            console.log("🔴 Invalid or missing token");
+            return NextResponse.json({ success: false, error: "Invalid or missing token" }, { status: 401 });
+        }
+
         const newReport = await ReportModel.create({
-            reporter: null,
+            reporter: reporterId,
             imageUrl: body.imageUrl,
             typeOfAnimal: body.typeOfAnimal,
             description: body.description,
