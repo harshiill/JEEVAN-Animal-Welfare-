@@ -69,6 +69,25 @@ export default function DashboardPage() {
       {/* Main Content */}
       <main className="flex-1 px-6 py-8">
         <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+         <nav className="flex gap-6 items-center text-base font-medium">
+          <a href="#">Home</a>
+          <a href="#">About Us</a>
+          <a href="/rescuetask">Rescue task</a>
+          <a href="/reportdanger">Report Danger</a>
+          <a href="/dashboard">Dashboard</a>
+          <a href="/login" className="text-[#00C4B4] hover:underline">Login</a>
+          <a href="/signup" className="text-[#00C4B4] hover:underline">Signup</a>
+          <a href="/donation">
+          <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">
+          Donate
+          </button>
+          </a>
+
+          <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">
+            Volunteer
+          </button>
+        </nav>
+        
 
         {/* Overview */}
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">

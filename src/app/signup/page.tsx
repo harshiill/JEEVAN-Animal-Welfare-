@@ -80,13 +80,21 @@ export default function SignupPage() {
         </div>
         <nav className="flex gap-6 items-center text-base font-medium">
           <a href="#">Home</a>
-          <a href="#">Report</a>
-          <a href="#">Rescue</a>
           <a href="#">About Us</a>
+          <a href="/rescuetask">Rescue task</a>
+          <a href="/reportdanger">Report Danger</a>
+          <a href="/dashboard">Dashboard</a>
           <a href="/login" className="text-[#00C4B4] hover:underline">Login</a>
           <a href="/signup" className="text-[#00C4B4] hover:underline">Signup</a>
-          <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">Donate</button>
-          <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">Volunteer</button>
+          <a href="/donation">
+          <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">
+          Donate
+          </button>
+          </a>
+
+          <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">
+            Volunteer
+          </button>
         </nav>
       </header>
 
