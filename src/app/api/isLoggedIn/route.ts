@@ -1,22 +1,38 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { NextRequest,NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 
 export async function GET(req: NextRequest) {
-    try {
-        const id = await getDataFromToken(req);
+  try {
+    const userData = getDataFromToken(req);
+    console.log("Request cookies:", req.cookies.get("token")?.value);
 
-    if(id)
-    {
-        return NextResponse.json({ isLoggedIn: true, id }, { status: 200 });
+    console.log("🟡 User data from token:", userData);
+    if (userData && userData.id) {
+      return NextResponse.json(
+        {
+          isLoggedIn: true,
+          id: userData.id,
+          name: userData.name,
+        },
+        { status: 200 }
+      );
+    } else {
+      return NextResponse.json(
+        {
+          isLoggedIn: false,
+          message: "Token missing or invalid.",
+        },
+        { status: 401 }
+      );
     }
-    else
-    {
-        return NextResponse.json({ isLoggedIn: false }, { status: 401 });
-    }
-    } catch (error : any) {
-         return NextResponse.json({ authenticated: false }, { status: 200 });
-    }
-    
+  } catch (error) {
+    return NextResponse.json(
+      {
+        isLoggedIn: false,
+        message: "Authentication failed.",
+      },
+      { status: 401 }
+    );
+  }
 }

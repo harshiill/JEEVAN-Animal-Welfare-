@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ success: false, error: "Missing fields" }, { status: 400 });
         }
 
-        const reporterId = await getDataFromToken(req);
+        const reporterId = getDataFromToken(req)?.id; // Extract reporter ID from token
         if (!reporterId) {
             console.log("🔴 Invalid or missing token");
             return NextResponse.json({ success: false, error: "Invalid or missing token" }, { status: 401 });

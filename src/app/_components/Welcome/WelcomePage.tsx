@@ -1,41 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import Image from "next/image";
+import Navbar from "../Navbar/Navbar";
 
 export default function WelcomePage() {
   return (
     <main className="min-h-screen bg-white text-black font-sans">
       {/* Navbar */}
-      <header className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
-        {/* Left: Logo */}
-        <div className="text-lg font-bold flex items-center gap-2">
-          <span className="text-xl">🐾</span> Jeevan
-        </div>
-
-        {/* Center: Links */}
-        <nav className="hidden md:flex gap-6 items-center text-sm font-medium">
-          <a href="#" className="hover:text-[#00C4B4]">Home</a>
-          <a href="#" className="hover:text-[#00C4B4]">Dashboard</a>
-          <a href="#" className="hover:text-[#00C4B4]">Donate</a>
-        </nav>
-
-        {/* Right: Profile + Menu */}
-        <div className="flex items-center gap-4">
-          {/* Hamburger icon */}
-          <button className="md:hidden">
-            <span className="text-2xl">☰</span>
-          </button>
-          {/* Profile image */}
-          <Image
-            src="/profile-user.png"
-            alt="User Avatar"
-            width={32}
-            height={32}
-            className="rounded-full border"
-          />
-        </div>
-      </header>
+      <Navbar />
 
       {/* Welcome Message */}
       <section className="flex flex-col items-center justify-center text-center px-4 mt-20">

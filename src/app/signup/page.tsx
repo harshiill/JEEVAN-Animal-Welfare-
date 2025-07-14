@@ -6,6 +6,7 @@ import { useState } from "react";
 import { signUpSchema } from "@/Schemas/signUpSchema";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
+import Navbar from "../_components/Navbar/Navbar";
 
 export default function SignupPage() {
   const [form, setForm] = useState({
@@ -74,29 +75,7 @@ export default function SignupPage() {
   return (
     <main className="min-h-screen bg-white text-[#000000] font-sans">
       {/* Navbar */}
-      <header className="flex justify-between items-center px-8 py-5 mb-6">
-        <div className="text-xl font-bold flex items-center gap-2">
-          <span className="text-lg">🐾</span> Jeevan
-        </div>
-        <nav className="flex gap-6 items-center text-base font-medium">
-          <a href="#">Home</a>
-          <a href="#">About Us</a>
-          <a href="/rescuetask">Rescue task</a>
-          <a href="/reportdanger">Report Danger</a>
-          <a href="/dashboard">Dashboard</a>
-          <a href="/login" className="text-[#00C4B4] hover:underline">Login</a>
-          <a href="/signup" className="text-[#00C4B4] hover:underline">Signup</a>
-          <a href="/donation">
-          <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">
-          Donate
-          </button>
-          </a>
-
-          <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">
-            Volunteer
-          </button>
-        </nav>
-      </header>
+      <Navbar />
 
       {/* Signup Form */}
       <div className="min-h-[calc(100vh-160px)] flex items-center justify-center bg-white px-4">

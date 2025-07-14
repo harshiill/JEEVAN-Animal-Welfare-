@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Navbar from "../Navbar/Navbar";
 
 export default function ReportDangerPage() {
   const [typeOfAnimal, setTypeOfAnimal] = useState("");
@@ -61,30 +62,7 @@ export default function ReportDangerPage() {
   return (
      <main className="min-h-screen bg-white text-[#000000] font-sans">
       {/* Navbar */}
-      <header className="flex justify-between items-center px-8 py-5 mb-6">
-        <div className="text-xl font-bold flex items-center gap-2">
-          <span className="text-lg">🐾</span> Jeevan
-        </div>
-
-        <nav className="flex gap-6 items-center text-base font-medium">
-          <a href="#">Home</a>
-          <a href="#">About Us</a>
-          <a href="/rescuetask">Rescue task</a>
-          <a href="/reportdanger">Report Danger</a>
-          <a href="/dashboard">Dashboard</a>
-          <a href="/login" className="text-[#00C4B4] hover:underline">Login</a>
-          <a href="/signup" className="text-[#00C4B4] hover:underline">Signup</a>
-          <a href="/donation">
-          <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">
-          Donate
-          </button>
-          </a>
-
-          <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">
-            Volunteer
-          </button>
-        </nav>
-      </header>
+      <Navbar />
     <form onSubmit={handleSubmit} className="max-w-xl mx-auto p-4 space-y-4">
       <h1 className="text-2xl font-bold">Report Injured Animal</h1>
 

@@ -27,19 +27,30 @@ export async function POST(request: NextRequest) {
     }
 
     const isValid = await bcrypt.compare(password, user.password);
-
     if (!isValid) {
       return NextResponse.json({ message: "Invalid password" }, { status: 401 });
     }
 
-    if (!process.env.TOKEN_SECRET) {
+    const secret = process.env.TOKEN_SECRET;
+    if (!secret) {
       return NextResponse.json({ message: "Missing TOKEN_SECRET" }, { status: 500 });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.TOKEN_SECRET, { expiresIn: "1d" });
+    const payload = { id: user._id, name: user.name };
+    const token = jwt.sign(payload, secret, { expiresIn: "1d" });
 
-    const response = NextResponse.json({ message: "Login successful", token });
-    response.cookies.set("token", token, { httpOnly: true });
+    const response = NextResponse.json({
+      message: "Login successful",
+      name: user.name, // helpful for frontend
+    });
+
+    response.cookies.set("token", token, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax", 
+  path: "/",
+});
+
 
     return response;
   } catch (error: any) {

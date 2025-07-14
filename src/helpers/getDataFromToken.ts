@@ -1,15 +1,20 @@
-import { NextRequest} from "next/server";
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import jwt from "jsonwebtoken";
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { NextRequest } from "next/server";
 
-export const getDataFromToken = async (request : NextRequest) => {
-    try {
-        const token=request.cookies.get("token")?.value || "";
-       const decodedToken : any= jwt.verify(token, process.env.TOKEN_SECRET!);
+export const getDataFromToken = (req: NextRequest): { id: string; name: string } | null => {
+  try {
+    const token = req.cookies.get("token")?.value || "";
 
-       return decodedToken.id
-    } catch (error : any) {
-        throw new Error(error.message);
-    
-   }
-}
+    if (!token) return null;
+
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET!) as { id: string; name: string };
+
+    return {
+      id: decoded.id,
+      name: decoded.name,
+    };
+  } catch (error) {
+    return null;
+  }
+};

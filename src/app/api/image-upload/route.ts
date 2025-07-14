@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
- import { getDataFromToken } from '@/helpers/getDataFromToken';
 import {v2 as cloudinary} from 'cloudinary';
 import fs from 'fs';
 import { NextRequest, NextResponse } from 'next/server';

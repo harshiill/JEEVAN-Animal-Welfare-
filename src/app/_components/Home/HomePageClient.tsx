@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Navbar from "../Navbar/Navbar";
 
 export default function HomePageClient() {
   const [imageUploaded, setImageUploaded] = useState(false);
@@ -42,30 +43,7 @@ export default function HomePageClient() {
   return (
     <main className="min-h-screen bg-white text-[#000000] font-sans">
       {/* Navbar */}
-      <header className="flex justify-between items-center px-8 py-5 mb-6">
-        <div className="text-xl font-bold flex items-center gap-2">
-          <span className="text-lg">🐾</span> Jeevan
-        </div>
-
-        <nav className="flex gap-6 items-center text-base font-medium">
-          <a href="#">Home</a>
-          <a href="#">About Us</a>
-          <a href="/rescuetask">Rescue task</a>
-          <a href="/reportdanger">Report Danger</a>
-          <a href="/dashboard">Dashboard</a>
-          <a href="/login" className="text-[#00C4B4] hover:underline">Login</a>
-          <a href="/signup" className="text-[#00C4B4] hover:underline">Signup</a>
-          <a href="/donation">
-          <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">
-          Donate
-          </button>
-          </a>
-
-          <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">
-            Volunteer
-          </button>
-        </nav>
-      </header>
+      <Navbar />
 
       {/* Hero */}
       <section className="relative w-full h-[480px] max-w-5xl mx-auto mt-8 rounded-xl overflow-hidden">

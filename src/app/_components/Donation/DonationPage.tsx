@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-unescaped-entities */
 "use client";
@@ -8,6 +9,7 @@ import { useState } from "react";
 import Script from "next/script";
 
 import { useEffect } from "react";
+import Navbar from "../Navbar/Navbar";
 
 
 declare global {
@@ -137,28 +139,7 @@ export default function DonatePage() {
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       <main className="min-h-screen bg-white text-[#000000] font-sans">
         {/* Navbar */}
-        <header className="flex justify-between items-center px-8 py-5 border-b">
-          <div className="text-xl font-bold flex items-center gap-2">
-            <span className="text-lg">🐾</span> Jeevan
-          </div>
-          <nav className="flex gap-6 items-center text-base font-medium">
-            <Link href="#">Home</Link>
-            <Link href="#">About Us</Link>
-            <Link href="/rescuetask">Rescue task</Link>
-            <Link href="/reportdanger">Report Danger</Link>
-            <Link href="/dashboard">Dashboard</Link>
-            <Link href="/login" className="text-[#00C4B4] hover:underline">Login</Link>
-            <Link href="/signup" className="text-[#00C4B4] hover:underline">Signup</Link>
-            <Link href="/donation">
-              <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">
-                Donate
-              </button>
-            </Link>
-            <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">
-              Volunteer
-            </button>
-          </nav>
-        </header>
+        <Navbar />
 
         {/* Content */}
         <section className="px-6 py-10 max-w-6xl mx-auto text-[16px]">
