@@ -23,17 +23,28 @@ export default function HomePageClient() {
     const formData = new FormData();
     formData.append("file", file);
 
+    console.log("🔁 Sending image to prediction API...");
+
     try {
-      const response = await fetch("https://dog-disease-api.onrender.com/predict", {
+      const response = await fetch("https://dog-disease-api.onrender.com/predict-json", {
         method: "POST",
         body: formData,
       });
 
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Server error: ${errorText}`);
+      }
+
       const data = await response.json();
+      console.log("✅ API Response:", data);
+
+      if (!data.success) throw new Error(data.error || "Unknown prediction error");
+
       setPrediction(data.prediction || "Unknown Disease");
-      setConfidence(data.confidence || null); // if confidence is returned as decimal (e.g., 0.95)
-    } catch (error) {
-      console.error("Prediction error:", error);
+      setConfidence(data.confidence || null);
+    } catch (error: any) {
+      console.error("❌ Prediction API error:", error);
       setPrediction("Prediction failed. Please try again.");
     } finally {
       setLoading(false);
@@ -81,6 +92,7 @@ export default function HomePageClient() {
           onChange={(e) => {
             const uploadedFile = e.target.files?.[0];
             if (uploadedFile) {
+              console.log("📸 Image selected:", uploadedFile.name);
               setImageUploaded(true);
               setImageUrl(URL.createObjectURL(uploadedFile));
               setFile(uploadedFile);
@@ -116,7 +128,7 @@ export default function HomePageClient() {
                     )}
                   </p>
                   <p className="text-gray-600">
-                    Treatment: Please consult a vet based on the predicted condition.{" "}
+                    Treatment: Please consult a vet based on the predicted condition. {" "}
                     <a className="text-[#00C4B4] underline font-medium" href="#">
                       Contact a vet
                     </a>
@@ -181,4 +193,3 @@ export default function HomePageClient() {
     </main>
   );
 }
-
