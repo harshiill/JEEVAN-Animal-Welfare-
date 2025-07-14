@@ -2,20 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/dbConfig";
 import { UserModel } from "@/models/user.models";
-import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
+import { sendEmail } from "@/helpers/mailer";
 
 export async function POST(req: NextRequest) {
   await dbConnect();
 
   try {
-    const { name, email, password, profilePicture } = await req.json();
+    const { name, email: rawEmail, password, profilePicture } = await req.json();
 
-    if (!name || !email || !password) {
+    if (!name || !rawEmail || !password) {
       return NextResponse.json(
         { message: "Name, email, and password are required" },
         { status: 400 }
       );
     }
+
+    const email = rawEmail.toLowerCase().trim();
 
     const existingUser = await UserModel.findOne({ email });
 
@@ -24,7 +26,7 @@ export async function POST(req: NextRequest) {
     expiryDate.setHours(expiryDate.getHours() + 1); // 1 hour expiry
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    
+
     if (existingUser) {
       if (existingUser.isVerified) {
         return NextResponse.json(
@@ -33,7 +35,6 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      
       await UserModel.updateOne(
         { email },
         {
@@ -43,7 +44,6 @@ export async function POST(req: NextRequest) {
         }
       );
     } else {
-     
       await UserModel.create({
         name,
         email,
@@ -51,8 +51,6 @@ export async function POST(req: NextRequest) {
         isVerified: false,
         verificationToken: verifyCode,
         verificationTokenExpires: expiryDate,
-        resetPasswordToken: "",
-        resetPasswordExpires: null,
         availabilityRadius: 0,
         profilePicture,
         location: {
@@ -62,12 +60,17 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const emailResponse = await sendVerificationEmail(email, name, verifyCode);
-
-    
-    if (emailResponse.status !== 200) {
+    try {
+      await sendEmail({
+        email,
+        emailType: "verify",
+        name,
+        otp: verifyCode,
+      });
+    } catch (emailError) {
+      console.error("Failed to send verification email:", emailError);
       return NextResponse.json(
-        { message: "Failed to send verification email" },
+        { message: "User created, but failed to send verification email." },
         { status: 500 }
       );
     }

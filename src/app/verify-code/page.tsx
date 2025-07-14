@@ -41,7 +41,7 @@ function Page() {
         <div>
           <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Verify Code</h1>
           <p className="text-center text-gray-600 mb-4">
-            Please enter the verification code sent to your email.
+            Please enter the verification code sent to your email.Check your inbox and spam folder if you don&#39;t see it.
           </p>
 
           <form className="max-w-md mx-auto" onSubmit={handleSubmit}>
