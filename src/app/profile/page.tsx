@@ -35,7 +35,7 @@ export default function ProfilePage() {
 
   const fetchProfile = async (page=1) => {
     try {
-      const res = await fetch(`/api/profile?queryPage=${page}&limit=5`);
+      const res = await fetch(`/api/profile?page=${page}&limit=5`);
       const data = await res.json();
       if (data.success) {
         setProfile(data.data);
