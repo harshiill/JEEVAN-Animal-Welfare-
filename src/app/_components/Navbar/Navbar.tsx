@@ -90,12 +90,16 @@ export default function Navbar() {
               <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">
                 Donate
               </button>
-            </Link>
-            {userName && (
+            </Link >
+            <Link href="/profile" className={navLinkClass("/profile")}>
+              {userName && (
               <span className="text-[#00C4B4] font-semibold ml-2">
                 Hi,{userName}
               </span>
             )}
+             </Link >
+
+            
             <button
               onClick={handleLogout}
               className="text-red-500 font-medium ml-4 hover:underline"
