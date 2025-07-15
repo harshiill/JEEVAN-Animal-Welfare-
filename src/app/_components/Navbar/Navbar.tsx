@@ -68,12 +68,15 @@ export default function Navbar() {
       </div>
 
       <nav className="flex gap-6 items-center text-base font-medium">
-        <Link href="#" className={navLinkClass("#")}>
-          About Us
+        <Link href="/" className={navLinkClass("/")}>
+          Home
         </Link>
 
         {loading ? null : isLoggedIn ? (
           <>
+            <Link href="/Model" className={navLinkClass("/Model")}>
+              Predict
+            </Link>
             <Link href="/rescuetask" className={navLinkClass("/rescuetask")}>
               Rescue task
             </Link>
@@ -88,12 +91,9 @@ export default function Navbar() {
                 Donate
               </button>
             </Link>
-            <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">
-              Volunteer
-            </button>
             {userName && (
               <span className="text-[#00C4B4] font-semibold ml-2">
-                Hi! {userName}
+                Hi,{userName}
               </span>
             )}
             <button

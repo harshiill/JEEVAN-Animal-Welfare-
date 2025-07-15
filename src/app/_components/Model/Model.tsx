@@ -5,6 +5,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Navbar from "../Navbar/Navbar";
+import Link from "next/link";
 
 interface VetClinic {
   name: string;
@@ -12,7 +13,7 @@ interface VetClinic {
   lon: number;
 }
 
-export default function HomePageClient() {
+export default function Model() {
   const [imageUploaded, setImageUploaded] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [showDiagnosis, setShowDiagnosis] = useState(false);
@@ -255,11 +256,12 @@ export default function HomePageClient() {
 
       {/* CTA */}
       <div className="flex justify-center gap-4 mb-16">
-        <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-6 py-3 rounded-full">
-          Volunteer
-        </button>
+       
         <button className="border border-gray-300 px-6 py-3 rounded-full text-sm">
+          <Link href="/donate" className="text-[#00C4B4] hover:underline font-medium">
           Donate
+          </Link>
+          
         </button>
       </div>
 
