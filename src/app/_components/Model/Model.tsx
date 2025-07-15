@@ -38,7 +38,7 @@ export default function Model() {
     formData.append("file", file);
 
     try {
-      const response = await fetch("https://dog-disease-api.onrender.com/predict-json", {
+      const response = await fetch("/api/predict-json", {
         method: "POST",
         body: formData,
       });

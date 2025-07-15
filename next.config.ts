@@ -10,6 +10,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/api/predict-json",
+        destination: "https://dog-disease-api.onrender.com/predict-json",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
