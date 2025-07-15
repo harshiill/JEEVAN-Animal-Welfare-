@@ -86,6 +86,9 @@ export default function Navbar() {
             <Link href="/dashboard" className={navLinkClass("/dashboard")}>
               Dashboard
             </Link>
+            <Link href="/forum" className={navLinkClass("/forum")}>
+              Forum
+            </Link>
             <Link href="/donation">
               <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">
                 Donate
