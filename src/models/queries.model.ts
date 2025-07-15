@@ -1,5 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import autopopulate from 'mongoose-autopopulate';
+import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 export interface Query extends Document {
   title?: string;
@@ -39,6 +40,7 @@ const QuerySchema = new Schema<Query>(
 );
 
 QuerySchema.plugin(autopopulate);
+QuerySchema.plugin(mongooseAggregatePaginate);
 
 export const QueryModel =
   mongoose.models.queries || mongoose.model<Query>('queries', QuerySchema);
