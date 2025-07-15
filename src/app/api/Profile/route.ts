@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 import dbConnect from "@/lib/dbConfig";
 import { UserModel } from "@/models/user.models";
@@ -5,14 +6,15 @@ import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-  await dbConnect();
+  
 
-  const userData = getDataFromToken(request);
+  try {
+    await dbConnect(); 
+    const userData = getDataFromToken(request);
   if (!userData) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-
-  const { id } = userData;
+    const { id } = userData;
   const user = await UserModel.findById(id);
   if (!user) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -136,4 +138,15 @@ export async function GET(request: NextRequest) {
     data: profile[0] || {},
     currentPage: page,
   });
+  } catch (error: any) {
+    console.error("API Error:", error); // This will show up in Vercel logs
+    return NextResponse.json(
+      { success: false, error: "An internal server error occurred.", message: error.message },
+      { status: 500 }
+    );
+
+  }
+ 
+
+  
 }
