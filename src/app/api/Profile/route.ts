@@ -1,0 +1,29 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { getDataFromToken } from "@/helpers/getDataFromToken";
+import dbConnect from "@/lib/dbConfig";
+import { DonorModel } from "@/models/donor.models";
+import { ReportModel } from "@/models/report.models";
+import { UserModel } from "@/models/user.models";
+import { NextRequest,NextResponse } from "next/server";
+
+
+export async function GET(request : NextRequest)
+{
+    await dbConnect();
+    const userData = getDataFromToken(request);
+    if (!userData) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { id } = userData;
+    const user = await UserModel.findById(id);
+
+    if (!user) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    
+
+
+
+}
