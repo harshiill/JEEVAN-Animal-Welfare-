@@ -77,7 +77,7 @@ export default function Navbar() {
             <Link href="/Model" className={navLinkClass("/Model")}>
               Predict
             </Link>
-            <Link href="/Gallery" className={navLinkClass("/Gallery")}>
+            <Link href="/gallery" className={navLinkClass("/gallery")}>
               Gallery
             </Link>
             <Link href="/rescuetask" className={navLinkClass("/rescuetask")}>
