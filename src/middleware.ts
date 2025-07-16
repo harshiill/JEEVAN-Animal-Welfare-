@@ -1,27 +1,33 @@
-import { NextRequest,NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-export function middleware(request : NextRequest)
-{
-    const path=request.nextUrl.pathname;
+export function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname;
 
-    const isPublicPath = path==='api/login' || path=='api/signup' || path ==='api/verify-code' || path === 'api/forgot-password' || path === 'api/reset-password';
+  const isPublicPath =
+    path === '/login' ||
+    path === '/signup' ||
+    path === '/verify-code' ||
+    path === '/forgot-password' ||
+    path === '/reset-password';
 
-    const token = request.cookies.get('token')?.value;
+  const token = request.cookies.get('token')?.value;
 
-    if(isPublicPath && token)
-    {
-        return NextResponse.redirect(new URL('/', request.url));
-    }
+  // If user is already logged in and accessing a public route, redirect to home
+  if (isPublicPath && token) {
+    return NextResponse.redirect(new URL('/', request.url));
+  }
 
-    if(!isPublicPath && !token)
-    {
-        return NextResponse.redirect(new URL('/login', request.url));
+  // If user is not logged in and trying to access a protected route
+  if (!isPublicPath && !token) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
 
-    }
+  return NextResponse.next(); // Allow request to continue
 }
 
 export const config = {
-    matcher:[
-
-    ]
-}
+  matcher: [
+    
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+  ],
+};
