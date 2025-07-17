@@ -3,7 +3,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "./_components/Navbar/Navbar";
@@ -38,6 +38,10 @@ export default function LandingPage() {
     router.push(isLoggedIn ? "/reportdanger" : "/login");
   };
 
+  const handleFeatureClick = (href: string) => {
+    router.push(isLoggedIn ? href : "/login");
+  };
+
   return (
     <main className="min-h-screen bg-white text-[#000000] font-sans">
       <Navbar />
@@ -45,13 +49,12 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="relative w-full h-[500px] max-w-6xl mx-auto mt-6 rounded-xl overflow-hidden">
         <Image
-  src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=1600&q=80"
-  alt="Hero"
-  fill
-  className="object-cover object-center rounded-xl"
-  priority
-/>
-
+          src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=1600&q=80"
+          alt="Hero"
+          fill
+          className="object-cover object-center rounded-xl"
+          priority
+        />
         <div className="absolute inset-0 bg-black/40 flex items-center justify-center text-center px-6">
           <div className="text-white">
             <h1 className="text-5xl md:text-6xl font-extrabold mb-4 drop-shadow-lg">
@@ -88,20 +91,27 @@ export default function LandingPage() {
           {
             title: "Report Incidents",
             desc: "Capture and report injured or stray animals instantly with our mobile-friendly interface.",
-            icon: "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/svgs/solid/exclamation-triangle.svg"
+            icon: "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/svgs/solid/exclamation-triangle.svg",
+            href: "/reportdanger",
           },
           {
             title: "AI Diagnosis",
             desc: "Upload images for AI-powered disease predictions to speed up treatment decisions.",
-            icon: "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/svgs/solid/microscope.svg"
+            icon: "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/svgs/solid/microscope.svg",
+            href: "/Model",
           },
           {
             title: "Nearby Vets",
             desc: "Automatically find nearby veterinary clinics to seek immediate help.",
-            icon: "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/svgs/solid/hospital.svg"
-          }
+            icon: "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/svgs/solid/hospital.svg",
+            href: "/Vet",
+          },
         ].map((f, i) => (
-          <div key={i} className="bg-[#f9f9f9] rounded-xl p-6 text-center shadow-sm">
+          <div
+            key={i}
+            className="bg-[#f9f9f9] rounded-xl p-6 text-center shadow-sm hover:shadow-md transition cursor-pointer"
+            onClick={() => handleFeatureClick(f.href)}
+          >
             <img
               src={f.icon}
               alt={f.title}
