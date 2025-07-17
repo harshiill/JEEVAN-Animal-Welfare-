@@ -7,6 +7,7 @@ import { signUpSchema } from "@/Schemas/signUpSchema";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
 import Navbar from "../_components/Navbar/Navbar";
+import Link from "next/link";
 
 export default function SignupPage() {
   const [form, setForm] = useState({
@@ -140,9 +141,9 @@ export default function SignupPage() {
 
             <p className="text-center text-sm text-gray-600 mt-4">
               Already have an account?{" "}
-              <a href="/login" className="text-[#00C4B4] hover:underline font-medium">
+              <Link href="/login" className="text-[#00C4B4] hover:underline font-medium">
                 Login here
-              </a>
+              </Link>
             </p>
           </div>
         </form>

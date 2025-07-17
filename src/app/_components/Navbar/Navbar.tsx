@@ -77,6 +77,9 @@ export default function Navbar() {
             <Link href="/Model" className={navLinkClass("/Model")}>
               Predict
             </Link>
+            <Link href="/gallery" className={navLinkClass("/gallery")}>
+              Gallery
+            </Link>
             <Link href="/rescuetask" className={navLinkClass("/rescuetask")}>
               Rescue task
             </Link>
@@ -85,6 +88,9 @@ export default function Navbar() {
             </Link>
             <Link href="/dashboard" className={navLinkClass("/dashboard")}>
               Dashboard
+            </Link>
+            <Link href="/forum" className={navLinkClass("/forum")}>
+              Forum
             </Link>
             <Link href="/donation">
               <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">

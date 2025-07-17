@@ -32,6 +32,9 @@ export default function RescuetaskPage() {
   };
 
   const markResolved = async (id: string) => {
+    const confirm = window.confirm(
+    "Do you want to contribute to the gallery by uploading a rescue image?"
+  );
     try {
       const res = await fetch(`/api/report/${id}`, {
         method: "PUT",
@@ -42,6 +45,9 @@ export default function RescuetaskPage() {
       const data = await res.json();
       if (data.success) {
         fetchReports(); // refresh UI
+         if (confirm) {
+        window.location.href = "/gallery/upload"; // 👈 redirect to gallery contribution page
+      }
       }
     } catch (error) {
       console.error("Error updating status:", error);
