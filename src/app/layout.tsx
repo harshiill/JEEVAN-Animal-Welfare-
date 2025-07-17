@@ -19,7 +19,6 @@ export const metadata: Metadata = {
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-import ChatBot from '@/app/_components/Chatbot/ChatBot';
 
 export default function RootLayout({
   children,
@@ -32,7 +31,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-        <ChatBot />
       </body>
     </html>
   );
