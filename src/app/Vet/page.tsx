@@ -1,7 +1,10 @@
-// src/app/Vet/page.tsx
+'use client';
 
-import VetPage from "../_components/Vet/VetPage";
+import VetLocatorPage from "../_components/Vet/VetPage";
 
-export default function VetRoutePage() {
-  return <VetPage />;
+
+
+
+export default function VetPage() {
+    return <VetLocatorPage />;
 }

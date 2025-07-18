@@ -62,7 +62,8 @@ export default function Navbar() {
       : "text-gray-600 hover:text-[#00C4B4]";
 
   return (
-    <header className="flex justify-between items-center px-8 py-5 mb-6">
+<header className="bg-white flex justify-between items-center px-8 py-5 mb-6 shadow-md">
+
       <div className="text-xl font-bold flex items-center gap-2">
         <span className="text-lg">🐾</span> Jeevan
       </div>
@@ -76,6 +77,9 @@ export default function Navbar() {
           <>
             <Link href="/Model" className={navLinkClass("/Model")}>
               Predict
+            </Link>
+            <Link href="/Vet" className={navLinkClass("/Vet")}>
+              Nearby Vet
             </Link>
             <Link href="/gallery" className={navLinkClass("/gallery")}>
               Gallery
