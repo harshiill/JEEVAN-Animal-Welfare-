@@ -1,11 +1,22 @@
 'use client';
-import { useState } from 'react';
 
-export default function ChatBot() {
+import { useEffect, useRef, useState } from 'react';
+import { Sparkles } from 'lucide-react';
+
+interface ChatBotProps {
+  isLoggedIn: boolean;
+}
+
+export default function ChatBot({ isLoggedIn }: ChatBotProps) {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
   const [input, setInput] = useState('');
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const chatEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -15,40 +26,85 @@ export default function ChatBot() {
     setInput('');
     setLoading(true);
 
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: [...messages, userMessage] }),
-    });
+    try {
+      const response = await fetch('/api/chatbot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [...messages, userMessage] }),
+      });
 
-    const data = await response.json();
-    const botMessage = { role: 'assistant', content: data.message || '⚠️ Error: Failed to respond.' };
+      const data = await response.json();
+      const fullText = data.message || '⚠️ Error: Failed to respond.';
+      const assistantMessage = { role: 'assistant', content: '' };
 
-    setMessages(prev => [...prev, botMessage]);
-    setLoading(false);
+      setMessages(prev => [...prev, assistantMessage]);
+
+      // Typing animation - character by character
+      for (let i = 0; i < fullText.length; i++) {
+        await new Promise(res => setTimeout(res, 10)); // speed: 10ms per char
+        setMessages(prev => {
+          const updated = [...prev];
+          const last = updated.length - 1;
+          updated[last] = {
+            ...updated[last],
+            content: updated[last].content + fullText[i],
+          };
+          return updated;
+        });
+      }
+    } catch (err) {
+      setMessages(prev => [
+        ...prev,
+        { role: 'assistant', content: '⚠️ Error: Unable to reach server.' },
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // 🔒 Hide chatbot if user is not logged in
+  if (!isLoggedIn) return null;
+
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-6 right-6 z-50">
       {open ? (
-        <div className="w-80 h-96 bg-white shadow-lg rounded-lg flex flex-col border border-gray-200">
-          <div className="flex items-center justify-between px-4 py-2 bg-blue-500 text-white rounded-t-lg">
-            <h2 className="text-sm font-semibold">DogCare Chatbot</h2>
-            <button onClick={() => setOpen(false)} className="text-lg font-bold">&times;</button>
+        <div className="w-[400px] h-[550px] bg-white shadow-2xl rounded-2xl flex flex-col border border-gray-300">
+          {/* Header */}
+          <div className="flex items-center justify-between px-4 py-3 bg-[#00a89d] text-white rounded-t-2xl">
+            <div className="flex items-center gap-2 text-lg font-semibold">
+              <Sparkles className="animate-pulse w-5 h-5" />
+              DogCare Assistant
+            </div>
+            <button
+              onClick={() => setOpen(false)}
+              className="text-xl font-bold hover:scale-110 transform duration-200"
+            >
+              ×
+            </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-2 space-y-2 text-sm bg-gray-50">
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-3 space-y-3 text-sm bg-blue-50 scrollbar-thin">
             {messages.map((msg, index) => (
-              <div key={index} className={`p-2 rounded-md ${msg.role === 'user' ? 'bg-blue-100 text-right' : 'bg-gray-200 text-left'}`}>
+              <div
+                key={index}
+                className={`max-w-[80%] px-3 py-2 rounded-lg shadow ${
+                  msg.role === 'user'
+                    ? 'bg-[#20b4aa] text-white self-end ml-auto '
+                    : 'bg-[#ffffff] border border-gray-300 text-gray-800 self-start mr-auto'
+                }`}
+              >
                 {msg.content}
               </div>
             ))}
-            {loading && <div className="text-gray-500 italic">Typing...</div>}
+
+            <div ref={chatEndRef} />
           </div>
 
-          <div className="p-2 flex items-center border-t border-gray-300">
+          {/* Input */}
+          <div className="p-3 flex items-center border-t border-gray-200 gap-2 bg-white">
             <input
-              className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded-l"
+              className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-l-xl outline-none"
               value={input}
               onChange={e => setInput(e.target.value)}
               placeholder="Ask something..."
@@ -56,7 +112,8 @@ export default function ChatBot() {
             />
             <button
               onClick={sendMessage}
-              className="bg-blue-500 text-white px-3 py-1 rounded-r text-sm"
+              disabled={!input.trim() || loading}
+              className="bg-[#00a89d] hover:bg-[#00968a] text-white px-4 py-2 rounded-r-xl text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             >
               Send
             </button>
@@ -65,9 +122,10 @@ export default function ChatBot() {
       ) : (
         <button
           onClick={() => setOpen(true)}
-          className="bg-blue-400 text-white px-4 py-2 rounded-full shadow-md text-sm hover:bg-blue-500"
+          className="flex items-center gap-3 bg-gradient-to-r from-[#00a67e] to-[#226059] hover:bg-[#00a89d] text-white px-6 py-3 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 "
         >
-          💬 Ask DogCare
+          <Sparkles className='animate-bounce w-5 h-5' />
+          Chat With DogCare
         </button>
       )}
     </div>

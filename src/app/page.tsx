@@ -3,6 +3,7 @@
 "use client";
 
 import Image from "next/image";
+import ChatBot from '@/app/_components/Chatbot/ChatBot';
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -139,6 +140,11 @@ export default function LandingPage() {
           Become a Volunteer
         </button>
       </section>
+
+      {/* Chatbot Component */}
+      {isLoggedIn && !loading && (
+        <ChatBot isLoggedIn={isLoggedIn} />
+      )}
 
       {/* Footer */}
       <footer className="text-sm text-gray-500 text-center py-6 mt-10">
