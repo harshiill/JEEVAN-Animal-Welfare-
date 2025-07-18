@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -31,6 +30,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ message: data.choices[0].message.content });
   } catch (err: unknown) {
+    console.error('Error in chatbot route:', err);
     return NextResponse.json({ message: '⚠️ Error: Unable to reach server.' }, { status: 500 });
+
   }
 }
