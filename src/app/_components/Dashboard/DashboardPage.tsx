@@ -51,11 +51,17 @@ export default function DashboardPage() {
     });
   }
 
-  if (loading) {
-    return (
-      <div className="p-6 text-gray-600 text-lg font-medium">Loading dashboard...</div>
-    );
-  }
+if (loading) {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-white">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="w-12 h-12 border-4 border-[#00C4B4] border-dashed rounded-full animate-spin"></div>
+        <p className="text-gray-600 text-lg font-medium">Loading dashboard...</p>
+      </div>
+    </div>
+  );
+}
+
 
   return (
     <div className="flex min-h-screen bg-white text-[#000] font-sans">
