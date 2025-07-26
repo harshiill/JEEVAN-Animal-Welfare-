@@ -11,7 +11,7 @@
   "dependencies": {
     "@barba/core": "^2.10.3",
     "@react-email/components": "^0.1.1",
-    "@tabler/icons-react": "^3.34.0",
+    "@tabler/icons-react": "^3.34.1",
     "axios": "^1.10.0",
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
@@ -40,6 +40,7 @@
     "razorpay": "^2.9.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-dropzone": "^14.3.8",
     "react-leaflet": "^5.0.0",
     "resend": "^4.6.0",
     "sonner": "^2.0.6",

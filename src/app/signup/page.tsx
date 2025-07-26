@@ -9,6 +9,7 @@ import Navbar from "../_components/Navbar/Navbar";
 import Link from "next/link";
 import { toast } from "sonner"
 import LoadingSpinner from "../_components/LoadingSpinner/page";
+import { FileUpload } from "@/components/ui/file-upload";
 
 export default function SignupPage() {
   const [form, setForm] = useState({
@@ -26,13 +27,14 @@ export default function SignupPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    setSelectedImage(file);
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
-    }
-  };
+  const handleImageChange = (files: File[]) => {
+  const file = files?.[0] || null;
+  setSelectedImage(file);
+  if (file) {
+    setImagePreview(URL.createObjectURL(file));
+  }
+};
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -123,12 +125,7 @@ if(isLoading) {
             />
 
             {/* 📷 File Input */}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="w-full"
-            />
+            <FileUpload onChange={handleImageChange} />
 
             {/* 🖼️ Preview */}
             {imagePreview && (
