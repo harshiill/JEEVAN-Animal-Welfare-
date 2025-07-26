@@ -11,6 +11,7 @@ import {
   InputOTPSeparator,
 } from "../../components/ui/input-otp";
 import { toast } from "sonner";
+import LoadingSpinner from '../_components/LoadingSpinner/page';
 
 export default function VerifyCodePage() {
   const [otp, setOtp] = useState('');
@@ -52,8 +53,11 @@ export default function VerifyCodePage() {
       handleComplete(value);
     }
   };
-
+    if(isLoading) {
+          <LoadingSpinner />
+        }
   return (
+    
     <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
       <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-8 md:p-10 border">
         <div className="text-center mb-6">

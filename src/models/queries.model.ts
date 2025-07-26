@@ -1,3 +1,4 @@
+import "@/models/user.models";
 import mongoose, { Document, Schema } from 'mongoose';
 import autopopulate from 'mongoose-autopopulate';
 import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';

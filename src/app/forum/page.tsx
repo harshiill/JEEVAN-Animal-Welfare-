@@ -5,6 +5,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Navbar from '../_components/Navbar/Navbar';
+import LoadingSpinnerInside from '../_components/LoadingSpinnerInside/LoadingSpinnerInside';
 
 interface Query {
   _id: string;
@@ -63,7 +64,7 @@ export default function ForumPage() {
         </div>
 
         {loading ? (
-          <p>Loading...</p>
+          <LoadingSpinnerInside title="Queries" />
         ) : queries.length === 0 ? (
           <p>No queries yet.</p>
         ) : (

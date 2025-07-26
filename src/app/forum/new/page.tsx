@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/app/_components/Navbar/Navbar';
-
+import { toast } from 'sonner';
+import LoadingSpinnerInside from '@/app/_components/LoadingSpinnerInside/LoadingSpinnerInside';
 export default function AddQueryPage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !content.trim()) return alert('All fields are required');
@@ -23,12 +23,23 @@ export default function AddQueryPage() {
     setLoading(false);
 
     if (res.ok) {
+      toast.success("Query posted successfully");
+      setTitle('');
+      setContent('');
+      setTimeout(() => {
+        router.push('/forum');
+      }, 1500);
       router.push('/forum');
+      
     } else {
-      alert('Failed to post query');
+      toast.error("Failed to post query");
     }
   };
 
+  if(loading)
+  {
+    <LoadingSpinnerInside title="Query Addition"/>
+  }
   return (
     <main className="min-h-screen bg-white text-[#000000] font-sans flex flex-col">
       <Navbar />

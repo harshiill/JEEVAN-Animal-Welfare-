@@ -5,6 +5,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Navbar from "@/app/_components/Navbar/Navbar";
+import { toast } from "sonner";
+import LoadingSpinnerInside from "@/app/_components/LoadingSpinnerInside/LoadingSpinnerInside";
 
 interface Query {
   _id: string;
@@ -34,19 +36,28 @@ export default function QueryDetailPage() {
   const [newComment, setNewComment] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   const fetchQuery = async () => {
-    const res = await fetch(`/api/query/${id}`);
-    const data = await res.json();
-    if (data.success) setQuery(data.data);
+    try {
+      const res = await fetch(`/api/query/${id}`);
+      const data = await res.json();
+      if (data.success) setQuery(data.data);
+    } catch (err) {
+      console.error("Failed to fetch query:", err);
+    }
   };
 
   const fetchComments = async () => {
-    const res = await fetch(`/api/comment?queryId=${id}&page=${page}`);
-    const data = await res.json();
-    if (data.success) {
-      setComments(data.data.comments);
-      setTotalPages(data.data.totalPages);
+    try {
+      const res = await fetch(`/api/comment?queryId=${id}&page=${page}`);
+      const data = await res.json();
+      if (data.success) {
+        setComments(data.data.comments);
+        setTotalPages(data.data.totalPages);
+      }
+    } catch (err) {
+      console.error("Failed to fetch comments:", err);
     }
   };
 
@@ -59,26 +70,38 @@ export default function QueryDetailPage() {
       body: JSON.stringify({ queryId: id, content: newComment }),
     });
 
-    if (res.ok) {
+    if (res.ok) { 
+      toast.success("Comment added successfully");
       setNewComment("");
       fetchComments();
+     
     } else {
-      alert("Failed to add comment");
+      toast.error("Failed to add comment");
     }
   };
 
   useEffect(() => {
-    fetchQuery();
+    setLoading(true);
+    Promise.all([fetchQuery(), fetchComments()]).finally(() =>
+      setLoading(false)
+    );
   }, []);
 
   useEffect(() => {
-    fetchComments();
+    setLoading(true);
+    fetchComments().finally(() => setLoading(false));
   }, [page]);
 
   return (
-    <main className="min-h-screen bg-white text-black font-sans">
+    <main className="min-h-screen bg-white text-black font-sans relative">
       <Navbar />
-      <div className="max-w-4xl mx-auto p-6">
+      {loading && <LoadingSpinnerInside title="Comments" />}
+
+      <div
+        className={`max-w-4xl mx-auto p-6 transition-opacity ${
+          loading ? "opacity-20 pointer-events-none select-none" : "opacity-100"
+        }`}
+      >
         {query && (
           <div className="bg-gray-100 p-4 rounded shadow mb-6">
             <div className="flex items-center gap-2 mb-2">

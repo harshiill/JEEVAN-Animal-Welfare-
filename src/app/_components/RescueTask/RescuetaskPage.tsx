@@ -1,9 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
 import RescueMap from "./RescueMapWrapper";
 import Navbar from "../Navbar/Navbar";
+import LoadingSpinnerInside from "../LoadingSpinnerInside/LoadingSpinnerInside";
 
 interface Report {
   _id: string;
@@ -18,9 +19,11 @@ interface Report {
 
 export default function RescuetaskPage() {
   const [reports, setReports] = useState<Report[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchReports = async () => {
     try {
+      setLoading(true);
       const res = await fetch("/api/report-all");
       const data = await res.json();
       if (data.success) {
@@ -28,6 +31,8 @@ export default function RescuetaskPage() {
       }
     } catch (error) {
       console.error("Error fetching reports:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -79,10 +84,13 @@ export default function RescuetaskPage() {
     fetchReports();
   }, []);
 
+  if (loading) {
+    return <LoadingSpinnerInside title="Reports" />;
+  }
+
   return (
     <main className="min-h-screen bg-white text-[#000000] font-sans">
       <Navbar />
-
       <div className="p-6 max-w-6xl mx-auto bg-gray-100">
         <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
           🐾 Active Rescue Reports
@@ -128,11 +136,12 @@ export default function RescuetaskPage() {
 
                 <span
                   className={`mt-3 inline-block px-3 py-1 rounded-full text-xs font-semibold w-fit
-                    ${report.status === "pending"
-                      ? "bg-yellow-100 text-yellow-800"
-                      : report.status === "in-progress"
-                      ? "bg-blue-100 text-blue-800"
-                      : "bg-green-100 text-green-800"
+                    ${
+                      report.status === "pending"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : report.status === "in-progress"
+                        ? "bg-blue-100 text-blue-800"
+                        : "bg-green-100 text-green-800"
                     }
                   `}
                 >

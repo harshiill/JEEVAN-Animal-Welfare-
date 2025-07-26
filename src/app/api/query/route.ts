@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // app/api/query/route.ts
 import dbConnect from "@/lib/dbConfig";
 import { NextRequest, NextResponse } from "next/server";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
+import { UserModel } from "@/models/user.models";
 import { QueryModel } from "@/models/queries.model";
-
 const PAGE_SIZE = 10; // You can change this if needed
 
 export async function GET(req: NextRequest) {
