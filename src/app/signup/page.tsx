@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import Navbar from "../_components/Navbar/Navbar";
 import Link from "next/link";
 import { toast } from "sonner"
+import LoadingSpinner from "../_components/LoadingSpinner/page";
 
 export default function SignupPage() {
   const [form, setForm] = useState({
@@ -77,6 +78,11 @@ export default function SignupPage() {
     }
   };
 
+if(isLoading) {
+     return (
+      <LoadingSpinner />
+      )  
+        }
   return (
     <main className="min-h-screen bg-white text-[#000000] font-sans">
       {/* Navbar */}

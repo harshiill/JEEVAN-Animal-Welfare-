@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import Link from "next/link";
 import Navbar from "../_components/Navbar/Navbar";
 import { toast } from "sonner"
+import LoadingSpinner from "../_components/LoadingSpinner/page";
 
 export default function LoginPage() {
   const [form, setForm] = useState({
@@ -45,7 +46,7 @@ export default function LoginPage() {
 
       setTimeout(() => {
         router.push('/');
-      }, 2500);
+      }, 1500);
      
       
     } catch (err: any) {
@@ -57,6 +58,11 @@ export default function LoginPage() {
     }
   };
 
+  if(isLoading) {
+       return (
+        <LoadingSpinner />
+        )  
+          }
   return (
     <main className="min-h-screen bg-white text-[#000000] font-sans">
       {/* Navbar */}
