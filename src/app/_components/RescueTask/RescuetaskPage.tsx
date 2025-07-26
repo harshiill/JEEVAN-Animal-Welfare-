@@ -149,21 +149,22 @@ export default function RescuetaskPage() {
                 </span>
 
                 {report.status !== "resolved" && (
-                  <button
-                    onClick={() => markResolved(report._id)}
-                    className="mt-3 bg-green-600 hover:bg-green-700 text-white text-sm py-1.5 px-4 rounded-xl transition"
-                  >
-                    Mark as Resolved
-                  </button>
-                )}
+  <button
+    onClick={() => markResolved(report._id)}
+    className="mt-3 bg-green-600 hover:bg-green-700 text-white text-sm py-1.5 px-4 rounded-xl transition w-full"
+  >
+    Mark as Resolved
+  </button>
+)}
 
-                {/* 🗑️ Delete Button */}
-                <button
-                  onClick={() => markDeleted(report._id)}
-                  className="mt-2 bg-red-500 hover:bg-red-600 text-white text-sm py-1.5 px-4 rounded-xl transition"
-                >
-                  Delete Report
-                </button>
+{/* 🗑️ Delete Button */}
+<button
+  onClick={() => markDeleted(report._id)}
+  className="mt-2 self-start bg-red-100 hover:bg-red-200 text-red-600 text-xs py-1 px-3 rounded-md transition"
+>
+  Delete
+</button>
+
               </div>
             );
           })}
