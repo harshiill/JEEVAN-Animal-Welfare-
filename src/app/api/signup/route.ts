@@ -75,10 +75,20 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    return NextResponse.json(
-      { message: "User created successfully. Verification email sent." },
-      { status: 201 }
-    );
+     const response = NextResponse.json({
+  message: "User created successfully. Verification email sent.",
+});
+
+response.cookies.set("signupEmail", email, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax",
+  maxAge: 60 * 60, // 1 hour
+  path: "/",
+});
+
+return response;
+
   } catch (error) {
     console.error("Signup error:", error);
     return NextResponse.json({ message: "Server error" }, { status: 500 });

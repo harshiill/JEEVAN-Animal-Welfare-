@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useState } from "react";
@@ -8,6 +7,7 @@ import axios from "axios";
 import { useRouter } from 'next/navigation';
 import Navbar from "../_components/Navbar/Navbar";
 import Link from "next/link";
+import { toast } from "sonner"
 
 export default function SignupPage() {
   const [form, setForm] = useState({
@@ -62,11 +62,15 @@ export default function SignupPage() {
         profilePicture: profilePictureUrl, // send image URL
       });
 
-      alert("Signup successful!");
-      router.push("/verify-code");
+      toast.success(res.data.message || "Signup successful!");
+      setTimeout(() => {
+        router.push("/verify-code");
+      }, 1500);
+  
       
     } catch (err: any) {
       console.error(err);
+      toast.error(err?.response?.data?.message || "Something went wrong.");
       setError(err?.response?.data?.message || err.message || "Something went wrong");
     } finally {
       setIsLoading(false);

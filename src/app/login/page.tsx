@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useState } from "react";
@@ -7,6 +6,7 @@ import { signInSchema } from "@/Schemas/LogInSchema";
 import { useRouter } from 'next/navigation';
 import Link from "next/link";
 import Navbar from "../_components/Navbar/Navbar";
+import { toast } from "sonner"
 
 export default function LoginPage() {
   const [form, setForm] = useState({
@@ -41,12 +41,17 @@ export default function LoginPage() {
         ...form,
       });
 
-      alert("Logged In successfully!");
-      router.push("/");
+      toast.success(res.data.message || "Login successful!");
+
+      setTimeout(() => {
+        router.push('/');
+      }, 2500);
+     
       
     } catch (err: any) {
       console.error(err);
-      setError(err?.response?.data?.message || err.message || "Something went wrong");
+      toast.error(err?.response?.data?.message || "Something went wrong.");
+      setError(err?.response?.data?.message || "Something went wrong.");
     } finally {
       setIsLoading(false);
     }

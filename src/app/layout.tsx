@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import 'mapbox-gl/dist/mapbox-gl.css';
 import ClientWrapper from "./_components/ClientWrapper/ClientWrapper";
+import { Toaster } from "@/components/ui/sonner"
 
 
 const geistSans = Geist({
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ClientWrapper>
           {children}
+          <Toaster />
         </ClientWrapper>
       </body>
     </html>

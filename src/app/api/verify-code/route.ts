@@ -5,9 +5,9 @@ import { UserModel } from "@/models/user.models";
 export async function POST(request: NextRequest) {
   await dbConnect();
   try {
-    const { email, code } = await request.json();
+    const { code } = await request.json();
+const email = request.cookies.get("signupEmail")?.value;
 
-    const decodedemail = decodeURIComponent(email);
 
     if (!email || !code) {
       return NextResponse.json(
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const user = await UserModel.findOne({ email: decodedemail });
+    const user = await UserModel.findOne({ email });
 
     if (!user) {
       return NextResponse.json(
@@ -40,10 +40,14 @@ const isCodeNotExpired = new Date(user.verificationTokenExpires) > new Date();
       user.isVerified = true;
       await user.save({ validateBeforeSave: false });
 
-      return NextResponse.json(
-        { success: true, message: "User verified successfully." },
-        { status: 200 }
-      );
+      const response = NextResponse.json({
+  success: true,
+  message: "User verified successfully.",
+});
+
+response.cookies.set("signupEmail", "", { maxAge: 0 }); 
+return response;
+
     } else if (!isCodeNotExpired) {
       return NextResponse.json(
         {
