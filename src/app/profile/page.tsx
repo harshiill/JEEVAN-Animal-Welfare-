@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../_components/Navbar/Navbar";
 import Link from "next/link";
-
+import LoadingSpinnerInside from "../_components/LoadingSpinnerInside/LoadingSpinnerInside";
 interface Query {
   _id: string;
   title: string;
@@ -59,7 +59,7 @@ export default function ProfilePage() {
   const totalPages = profile ? Math.ceil(profile.queries.length / pageSize) : 1;
   const paginatedQueries = profile ? paginate(profile.queries, currentPage, pageSize) : [];
 
-  if (loading) return <p className="text-center p-6 text-gray-500">Loading profile...</p>;
+  if (loading) return <LoadingSpinnerInside title="Profile" />;
   if (!profile) return <p className="text-center p-6 text-red-500">Failed to load profile.</p>;
 
   return (
