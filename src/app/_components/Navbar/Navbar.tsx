@@ -1,43 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import useSWR from "swr";
+import { useCallback, useState } from "react";
+import { Menu, X } from "lucide-react";
+
+const fetcher = (url: string) =>
+  fetch(url, { credentials: "include" }).then((res) => res.json());
 
 export default function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const pathname = usePathname(); // ✅ for active link check
+  const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const res = await fetch("/api/isLoggedIn", {
-          credentials: "include",
-        });
+  const { data, isLoading } = useSWR("/api/isLoggedIn", fetcher);
+  const isLoggedIn = data?.isLoggedIn;
+  const userName = data?.name;
 
-        const data = await res.json();
-
-        if (data.isLoggedIn) {
-          setIsLoggedIn(true);
-          setUserName(data.name || null);
-        } else {
-          setIsLoggedIn(false);
-          setUserName(null);
-        }
-      } catch (error) {
-        console.error("Login check failed:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkLoginStatus();
-  }, []);
-
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     try {
       const res = await fetch("/api/logout", {
         method: "GET",
@@ -45,8 +26,6 @@ export default function Navbar() {
       });
 
       if (res.ok) {
-        setIsLoggedIn(false);
-        setUserName(null);
         router.push("/login");
       } else {
         console.error("Logout failed.");
@@ -54,80 +33,121 @@ export default function Navbar() {
     } catch (err) {
       console.error("Logout error:", err);
     }
-  };
+  }, [router]);
 
   const navLinkClass = (href: string) =>
     pathname === href
-      ? "text-[#00C4B4] font-semibold underline underline-offset-4"
-      : "text-gray-600 hover:text-[#00C4B4]";
+      ? "text-emerald-600 font-semibold underline underline-offset-4"
+      : "text-gray-700 hover:text-emerald-600 transition";
+
+  const links = [
+    { href: "/Model", label: "Predict" },
+    { href: "/Vet", label: "Nearby Vet" },
+    { href: "/gallery", label: "Gallery" },
+    { href: "/rescuetask", label: "Rescue Task" },
+    { href: "/reportdanger", label: "Report Danger" },
+    { href: "/dashboard", label: "Dashboard" },
+    { href: "/forum", label: "Forum" },
+  ];
 
   return (
-<header className="bg-white flex justify-between items-center px-8 py-5 mb-6 shadow-md">
-
-      <div className="text-xl font-bold flex items-center gap-2">
-        <span className="text-lg">🐾</span> Jeevan
+    <header className="sticky top-0 z-50 bg-white shadow-sm px-4 md:px-10 py-4 flex items-center justify-between">
+      <div className="flex items-center gap-2 text-xl font-bold">
+        <span className="text-2xl">🐾</span> Jeevan
       </div>
 
-      <nav className="flex gap-6 items-center text-base font-medium">
-        <Link href="/" className={navLinkClass("/")}>
-          Home
-        </Link>
+      {/* Desktop Nav */}
+      <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+        <Link href="/" className={navLinkClass("/")}>Home</Link>
 
-        {loading ? null : isLoggedIn ? (
+        {!isLoading && isLoggedIn ? (
           <>
-            <Link href="/Model" className={navLinkClass("/Model")}>
-              Predict
-            </Link>
-            <Link href="/Vet" className={navLinkClass("/Vet")}>
-              Nearby Vet
-            </Link>
-            <Link href="/gallery" className={navLinkClass("/gallery")}>
-              Gallery
-            </Link>
-            <Link href="/rescuetask" className={navLinkClass("/rescuetask")}>
-              Rescue task
-            </Link>
-            <Link href="/reportdanger" className={navLinkClass("/reportdanger")}>
-              Report Danger
-            </Link>
-            <Link href="/dashboard" className={navLinkClass("/dashboard")}>
-              Dashboard
-            </Link>
-            <Link href="/forum" className={navLinkClass("/forum")}>
-              Forum
-            </Link>
+            {links.map(({ href, label }) => (
+              <Link key={href} href={href} className={navLinkClass(href)}>
+                {label}
+              </Link>
+            ))}
             <Link href="/donation">
-              <button className="bg-[#00C4B4] hover:bg-[#00a89d] text-white font-medium px-5 py-2 rounded-full">
+              <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-full font-medium">
                 Donate
               </button>
-            </Link >
-            <Link href="/profile" className={navLinkClass("/profile")}>
+            </Link>
+            <Link href="/profile" className="ml-2">
               {userName && (
-              <span className="text-[#00C4B4] font-semibold ml-2">
-                Hi,{userName}
-              </span>
-            )}
-             </Link >
-
-            
+                <span className="text-emerald-600 font-semibold">
+                  Hi, {userName}
+                </span>
+              )}
+            </Link>
             <button
               onClick={handleLogout}
-              className="text-red-500 font-medium ml-4 hover:underline"
+              className="text-red-500 hover:underline ml-4"
             >
               Logout
             </button>
           </>
         ) : (
           <>
-            <Link href="/login" className={navLinkClass("/login")}>
-              Login
-            </Link>
-            <Link href="/signup" className={navLinkClass("/signup")}>
-              Signup
-            </Link>
+            <Link href="/login" className={navLinkClass("/login")}>Login</Link>
+            <Link href="/signup" className={navLinkClass("/signup")}>Signup</Link>
           </>
         )}
       </nav>
+
+      {/* Mobile Menu Button */}
+      <button
+        className="md:hidden text-gray-600"
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        aria-label="Toggle Menu"
+      >
+        {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+      </button>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="absolute top-16 left-0 w-full bg-white shadow-lg z-40 flex flex-col gap-4 p-6 md:hidden transition-all">
+          <Link href="/" className={navLinkClass("/")}>Home</Link>
+
+          {!isLoading && isLoggedIn ? (
+            <>
+              {links.map(({ href, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className={navLinkClass(href)}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {label}
+                </Link>
+              ))}
+              <Link href="/donation">
+                <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-full w-full mt-2">
+                  Donate
+                </button>
+              </Link>
+              <Link href="/profile" onClick={() => setMobileMenuOpen(false)}>
+                <span className="text-emerald-600 font-semibold">
+                  Hi, {userName}
+                </span>
+              </Link>
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setMobileMenuOpen(false);
+                }}
+                className="text-red-500 hover:underline"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/login" className={navLinkClass("/login")}>Login</Link>
+              <Link href="/signup" className={navLinkClass("/signup")}>Signup</Link>
+            </>
+          )}
+        </div>
+      )}
     </header>
   );
 }

@@ -1,38 +1,43 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextRequest, NextResponse } from "next/server";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 
 export async function GET(req: NextRequest) {
   try {
     const userData = getDataFromToken(req);
-    console.log("Request cookies:", req.cookies.get("token")?.value);
 
-    console.log("🟡 User data from token:", userData);
-    if (userData && userData.id) {
-      return NextResponse.json(
-        {
-          isLoggedIn: true,
-          id: userData.id,
-          name: userData.name,
-        },
-        { status: 200 }
-      );
-    } else {
+    if (!userData) {
       return NextResponse.json(
         {
           isLoggedIn: false,
-          message: "Token missing or invalid.",
+          message: "Invalid or expired token.",
         },
         { status: 401 }
       );
     }
+
+    return NextResponse.json(
+      {
+        isLoggedIn: true,
+        id: userData.id,
+        name: userData.name,
+      },
+      {
+        status: 200,
+        headers: {
+          // Optional: disable caching to ensure always fresh auth check
+          "Cache-Control": "no-store",
+        },
+      }
+    );
   } catch (error) {
+    console.error("❌ Auth check failed:", error);
+
     return NextResponse.json(
       {
         isLoggedIn: false,
-        message: "Authentication failed.",
+        message: "Authentication check failed.",
       },
-      { status: 401 }
+      { status: 500 }
     );
   }
 }
