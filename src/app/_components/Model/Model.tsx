@@ -122,7 +122,7 @@ export default function Model() {
       {/* Hero Section */}
       <section className="relative w-full h-[480px] max-w-6xl mx-auto mt-8 rounded-2xl overflow-hidden shadow-md">
         <Image
-          src="/dog-hero.jpeg"
+          src="/Dog5.jpg"
           alt="Dog Hero"
           fill
           className="object-cover rounded-2xl"
