@@ -27,6 +27,7 @@
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
+    "lottie-react": "^2.4.1",
     "lucide-react": "^0.525.0",
     "mapbox-gl": "^1.13.1",
     "mongoose": "^8.16.0",

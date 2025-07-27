@@ -189,7 +189,11 @@ export default function Model() {
                   </p>
                 </>
               ) : (
-                <p className="text-red-600">Diagnosis failed.</p>
+                <p className="text-green-600 flex items-center gap-2">
+  Result is Loading...
+  <span className="animate-bounce text-2xl">🐕‍🦺</span>
+</p>
+
               )}
             </div>
             <div>

@@ -7,6 +7,14 @@
   --foreground: #171717;
 }
 
+@keyframes run {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(10px); }
+}
+.animate-run {
+  animation: run 0.5s ease-in-out infinite alternate;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
