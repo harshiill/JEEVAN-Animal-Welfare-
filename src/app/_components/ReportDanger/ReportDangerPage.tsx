@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "../Navbar/Navbar";
 import { toast } from "sonner";
+import { FileUpload } from "@/components/ui/file-upload";
 
 export default function ReportDangerPage() {
   const [typeOfAnimal, setTypeOfAnimal] = useState("");
@@ -109,16 +110,15 @@ export default function ReportDangerPage() {
             required
           />
 
-          <label className="block">
-            <span className="text-sm font-medium text-gray-700">Upload Image</span>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImage(e.target.files?.[0] || null)}
-              className="mt-1 block w-full text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-white focus:outline-none"
-              required
+          <div>
+            <p className="text-sm font-medium mb-1">Upload Image</p>
+            <FileUpload
+              onChange={(files) => {
+                const file = files[0];
+                if (file) setImage(file);
+              }}
             />
-          </label>
+          </div>
 
           <div className="flex items-center gap-3">
             <button

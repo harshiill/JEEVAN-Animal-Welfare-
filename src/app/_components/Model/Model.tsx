@@ -6,6 +6,8 @@ import { useState } from "react";
 import Image from "next/image";
 import Navbar from "../Navbar/Navbar";
 import Link from "next/link";
+import { FileUpload } from "@/components/ui/file-upload";
+import { toast } from "sonner";
 
 interface VetClinic {
   name: string;
@@ -14,24 +16,29 @@ interface VetClinic {
 }
 
 export default function Model() {
-  const [imageUploaded, setImageUploaded] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [showDiagnosis, setShowDiagnosis] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [prediction, setPrediction] = useState<string | null>(null);
   const [confidence, setConfidence] = useState<number | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
+  const [showDiagnosis, setShowDiagnosis] = useState(false);
 
-  const [vetLoading, setVetLoading] = useState(false);
   const [vetClinics, setVetClinics] = useState<VetClinic[]>([]);
+  const [vetLoading, setVetLoading] = useState(false);
   const [vetError, setVetError] = useState<string | null>(null);
   const [showVets, setShowVets] = useState(false);
 
-  const handleRunDiagnosis = async () => {
-    if (!file) return;
-    setLoading(true);
+  const handleFileSelect = (file: File) => {
+    setFile(file);
+    setImageUrl(URL.createObjectURL(file));
     setPrediction(null);
     setConfidence(null);
+    setShowDiagnosis(false);
+  };
+
+  const handleRunDiagnosis = async () => {
+    if (!file) return toast.error("Please upload an image first.");
+    setLoading(true);
     setShowDiagnosis(true);
 
     const formData = new FormData();
@@ -43,19 +50,15 @@ export default function Model() {
         body: formData,
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Server error: ${errorText}`);
-      }
-
       const data = await response.json();
-      if (!data.success) throw new Error(data.error || "Unknown prediction error");
+      if (!data.success) throw new Error(data.error || "Prediction failed.");
 
       setPrediction(data.prediction || "Unknown Disease");
       setConfidence(data.confidence || null);
-    } catch (error: any) {
-      console.error("Prediction error:", error);
-      setPrediction("Prediction failed. Please try again.");
+      toast.success("Diagnosis successful!");
+    } catch (error) {
+      toast.error("Failed to diagnose. Please try again.");
+      setPrediction("Diagnosis failed.");
     } finally {
       setLoading(false);
     }
@@ -63,7 +66,7 @@ export default function Model() {
 
   const handleFindVets = () => {
     if (!navigator.geolocation) {
-      setVetError("Geolocation not supported.");
+      setVetError("Geolocation is not supported.");
       return;
     }
 
@@ -80,9 +83,7 @@ export default function Model() {
           const overpassUrl = `https://overpass-api.de/api/interpreter`;
           const query = `
             [out:json];
-            node
-              ["amenity"="veterinary"]
-              (around:10000,${latitude},${longitude});
+            node["amenity"="veterinary"](around:10000,${latitude},${longitude});
             out;
           `;
 
@@ -115,92 +116,86 @@ export default function Model() {
   };
 
   return (
-    <main className="min-h-screen bg-white text-[#000000] font-sans">
+    <main className="min-h-screen bg-white text-black font-sans">
       <Navbar />
 
-      {/* Hero */}
-      <section className="relative w-full h-[480px] max-w-5xl mx-auto mt-8 rounded-xl overflow-hidden">
+      {/* Hero Section */}
+      <section className="relative w-full h-[480px] max-w-6xl mx-auto mt-8 rounded-2xl overflow-hidden shadow-md">
         <Image
           src="/dog-hero.jpeg"
           alt="Dog Hero"
           fill
-          className="object-cover object-center rounded-xl"
-          priority
+          className="object-cover rounded-2xl"
         />
-        <div className="absolute inset-0 flex items-end justify-end p-10 bg-gradient-to-r from-transparent via-black/30 to-black/50 rounded-xl">
-          <div className="text-right text-white max-w-md">
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-4 drop-shadow-md">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/30 to-black/60 flex items-end justify-end p-10">
+          <div className="text-white text-right max-w-md">
+            <h1 className="text-4xl md:text-5xl font-extrabold mb-3 drop-shadow">
               Help Us Save Lives
             </h1>
-            <p className="text-base md:text-lg mb-6 drop-shadow">
-              Report stray or injured animals and get real-time diagnosis and assistance
+            <p className="text-base md:text-lg drop-shadow">
+              Report stray or injured animals and get real-time diagnosis and vet help.
             </p>
           </div>
         </div>
       </section>
 
       {/* Upload */}
-      <section className="border-2 border-dashed border-gray-300 rounded-xl p-8 mx-auto my-10 text-center max-w-5xl">
-        <h2 className="font-semibold text-md mb-2">Upload Image</h2>
-        <p className="text-sm mb-4 text-gray-700">
-          Drag and drop or click to upload an image of the animal.
+      <section className="border-2 border-dashed border-gray-300 rounded-2xl p-8 mx-auto my-10 text-center max-w-3xl shadow">
+        <h2 className="text-lg font-semibold mb-2">Upload Image</h2>
+        <p className="text-sm text-gray-700 mb-4">
+          Upload an image of the animal to get a diagnosis.
         </p>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => {
-            const uploadedFile = e.target.files?.[0];
-            if (uploadedFile) {
-              setImageUploaded(true);
-              setImageUrl(URL.createObjectURL(uploadedFile));
-              setFile(uploadedFile);
-              setShowDiagnosis(false);
-              setPrediction(null);
-              setConfidence(null);
-            }
-          }}
-          className="mb-4"
-        />
-        <br />
+
+        {/* FileUpload Component */}
+        <div className="mb-4">
+          <FileUpload onChange={(files) => handleFileSelect(files[0])} />
+
+        </div>
+
         <button
-          className="bg-gray-900 text-white px-5 py-2 rounded-full font-medium disabled:opacity-50"
           onClick={handleRunDiagnosis}
-          disabled={!imageUploaded || loading}
+          disabled={!file || loading}
+          className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition disabled:opacity-50"
         >
-          {loading ? "Running..." : "Run Diagnosis"}
+          {loading ? "Running Diagnosis..." : "Run Diagnosis"}
         </button>
       </section>
 
       {/* Diagnosis */}
       {showDiagnosis && (
-        <section className="max-w-5xl mx-auto my-20">
-          <h2 className="font-bold text-2xl mb-6 text-center">Diagnosis Result</h2>
-          <div className="bg-[#f9f9f9] rounded-xl px-10 py-10 flex flex-col sm:flex-row sm:justify-between items-center gap-8">
-            <div className="text-lg w-full sm:w-3/4 leading-relaxed">
+        <section className="max-w-4xl mx-auto my-16">
+          <h2 className="text-2xl font-bold mb-6 text-center">Diagnosis Result</h2>
+          <div className="bg-gray-100 p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 shadow">
+            <div className="flex-1 text-left">
               {prediction ? (
                 <>
-                  <p className="font-semibold mb-3">
-                    Predicted Disease: <span className="text-[#333]">{prediction}</span>
-                    {confidence !== null && <> (Confidence: {(confidence * 100).toFixed(2)}%)</>}
+                  <p className="font-semibold text-gray-800">
+                    Predicted Disease:{" "}
+                    <span className="text-blue-700">{prediction}</span>
+                    {confidence !== null && (
+                      <span className="ml-2 text-sm text-gray-600">
+                        (Confidence: {(confidence * 100).toFixed(2)}%)
+                      </span>
+                    )}
                   </p>
-                  <p className="text-gray-600">
-                    Treatment: Please consult a vet based on the predicted condition.{" "}
+                  <p className="mt-4 text-gray-700">
+                    Please consult a vet for proper treatment.
                     <button
-                      className="text-[#00C4B4] underline font-medium"
                       onClick={handleFindVets}
+                      className="ml-2 text-blue-600 underline hover:text-blue-800"
                     >
-                      Contact a vet
+                      Find Nearby Vets
                     </button>
                   </p>
                 </>
               ) : (
-                <p className="text-red-600">Result is loading.</p>
+                <p className="text-red-600">Diagnosis failed.</p>
               )}
             </div>
             <div>
               <Image
                 src={imageUrl || "/diagnosis-dog.jpg"}
-                alt="Diagnosis Dog"
+                alt="Diagnosis"
                 width={180}
                 height={180}
                 className="rounded-xl object-cover"
@@ -208,27 +203,27 @@ export default function Model() {
             </div>
           </div>
 
-          {/* Vet Results */}
+          {/* Vets */}
           {showVets && (
             <div className="mt-8">
-              <h3 className="text-xl font-semibold mb-4">Nearby Vet Clinics</h3>
+              <h3 className="text-lg font-semibold mb-3">Nearby Vet Clinics</h3>
               {vetLoading ? (
-                <p>Searching for nearby clinics...</p>
+                <p>Locating nearby clinics...</p>
               ) : vetError ? (
                 <p className="text-red-600">{vetError}</p>
               ) : vetClinics.length === 0 ? (
-                <p>No clinics found nearby.</p>
+                <p>No vet clinics found nearby.</p>
               ) : (
-                <ul className="list-disc pl-5">
+                <ul className="list-disc pl-6 text-sm text-gray-800 space-y-2">
                   {vetClinics.map((clinic, idx) => (
                     <li key={idx}>
-                      {clinic.name}{" "}
+                      {clinic.name}
                       <a
-                        href={`https://www.google.com/maps?q=${clinic.lat},${clinic.lon}`}
+                        href={`https://maps.google.com/?q=${clinic.lat},${clinic.lon}`}
                         target="_blank"
-                        className="text-blue-600 underline ml-2"
+                        className="ml-2 text-blue-600 underline hover:text-blue-800"
                       >
-                        View on Map
+                        View on map
                       </a>
                     </li>
                   ))}
@@ -249,28 +244,27 @@ export default function Model() {
       </section>
 
       {/* Stats */}
-      <section className="bg-[#f3f5f7] py-6 px-8 mx-auto max-w-5xl rounded-xl text-center mb-12">
+      <section className="bg-gray-50 py-6 px-8 mx-auto max-w-5xl rounded-xl text-center mb-12">
         <p className="text-gray-600 text-sm mb-1">Dogs Rescued</p>
-        <p className="text-2xl font-bold">5,000</p>
+        <p className="text-2xl font-bold text-blue-700">5,000+</p>
       </section>
 
       {/* CTA */}
       <div className="flex justify-center gap-4 mb-16">
-       
-        <button className="border border-gray-300 px-6 py-3 rounded-full text-sm">
-          <Link href="/donate" className="text-[#00C4B4] hover:underline font-medium">
+        <Link
+          href="/donate"
+          className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition"
+        >
           Donate
-          </Link>
-          
-        </button>
+        </Link>
       </div>
 
       {/* Footer */}
-      <footer className="text-sm text-gray-500 text-center py-6">
+      <footer className="text-sm text-gray-500 text-center py-6 border-t">
         <div className="flex justify-center gap-6 mb-3">
           <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-          <a href="#">Contact Us</a>
+          <a href="#">Terms</a>
+          <a href="#">Contact</a>
         </div>
         <p>© 2024 Jeevan. All rights reserved.</p>
       </footer>
