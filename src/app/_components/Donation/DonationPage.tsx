@@ -10,7 +10,8 @@ import Script from "next/script";
 
 import { useEffect } from "react";
 import Navbar from "../Navbar/Navbar";
-
+import { toast } from "sonner";
+import LoadingSpinner from "../LoadingSpinner/page";
 
 declare global {
   interface Window {
@@ -52,7 +53,7 @@ export default function DonatePage() {
   const totalAmount = calculateTotal();
 
   if (!totalAmount || isNaN(totalAmount) || totalAmount <= 0) {
-    alert("Please enter a valid donation amount.");
+    toast.error("Please select a valid amount to donate.");
     setLoading(false);
     return;
   }
@@ -70,7 +71,7 @@ export default function DonatePage() {
 
     const id = sessionRes?.id;
     if (!id) {
-      alert("Please log in to make a donation.");
+      toast.error("You need to be logged in to donate.");
       setLoading(false);
       return;
     }
@@ -78,7 +79,7 @@ export default function DonatePage() {
     // Step 2: Get user details (dependent on ID)
     const user = await fetch(`/api/getUserById?id=${id}`).then((res) => res.json());
     if (!user) {
-      alert("User not found. Please log in again.");
+      toast.error("Failed to fetch user details.");
       setLoading(false);
       return;
     }
@@ -110,10 +111,10 @@ export default function DonatePage() {
             body: JSON.stringify(donorData),
           });
 
-          alert("Payment Successful! Thank you for your donation.");
+          toast.success("Thank you for your generous donation!");
         } catch (error) {
           console.error("Error recording donation:", error);
-          alert("Payment succeeded, but failed to record donation.");
+          toast.error("Failed to record donation. Please try again.");
         }
       },
       prefill: {
@@ -127,13 +128,13 @@ export default function DonatePage() {
     rzp.open();
   } catch (error) {
     console.error("Payment initiation failed:", error);
-    alert("Something went wrong. Please try again.");
+    toast.error("Failed to initiate payment. Please try again.");
   } finally {
     setLoading(false);
   }
 };
 
-
+  if(loading) return <LoadingSpinner />;
   return (
     <>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
