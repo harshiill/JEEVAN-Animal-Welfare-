@@ -249,8 +249,8 @@ export default function Model() {
 
       {/* Stats */}
       <section className="bg-gray-50 py-6 px-8 mx-auto max-w-5xl rounded-xl text-center mb-12">
-        <p className="text-gray-600 text-sm mb-1">Dogs Rescued</p>
-        <p className="text-2xl font-bold text-blue-700">5,000+</p>
+        <p className="text-gray-600 text-sm mb-1">OUR MOTO</p>
+        <p className="text-2xl font-bold text-blue-700">ONE FOR ALL-ALL FOR ONE </p>
       </section>
 
       {/* CTA */}
