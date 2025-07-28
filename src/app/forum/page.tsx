@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import useSWR from 'swr';
 import Link from 'next/link';
 import Navbar from '../_components/Navbar/Navbar';
-import LoadingSpinnerInside from '../_components/LoadingSpinnerInside/LoadingSpinnerInside';
+import Footer from '../_components/Footer/Footer';
 
 interface Query {
   _id: string;
@@ -18,36 +18,15 @@ interface Query {
   createdAt: string;
 }
 
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 export default function ForumPage() {
-  const [queries, setQueries] = useState<Query[]>([]);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(true);
 
-  const fetchQueries = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch(`/api/query?page=${page}`);
-      const data = await res.json();
+  const { data, error, isLoading } = useSWR(`/api/query?page=${page}`, fetcher);
 
-      if (data.success && data.data?.queries) {
-        setQueries(data.data.queries);
-        setTotalPages(data.data.totalPages || 1);
-      } else {
-        setQueries([]);
-        setTotalPages(1);
-      }
-    } catch (err) {
-      console.error("Failed to fetch queries:", err);
-      setQueries([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchQueries();
-  }, [page]);
+  const queries: Query[] = data?.data?.queries || [];
+  const totalPages = data?.data?.totalPages || 1;
 
   return (
     <main className="min-h-screen bg-white text-[#000000] font-sans">
@@ -63,8 +42,20 @@ export default function ForumPage() {
           </Link>
         </div>
 
-        {loading ? (
-          <LoadingSpinnerInside title="Queries" />
+        {/* Loading Skeletons */}
+        {isLoading ? (
+          Array.from({ length: 4 }).map((_, i) => (
+            <div
+              key={i}
+              className="animate-pulse p-4 mb-4 bg-gray-100 rounded-xl shadow"
+            >
+              <div className="h-5 w-3/4 bg-gray-300 rounded mb-2" />
+              <div className="h-4 w-full bg-gray-300 rounded mb-2" />
+              <div className="h-4 w-2/3 bg-gray-300 rounded" />
+            </div>
+          ))
+        ) : error ? (
+          <p className="text-red-600">Failed to load queries.</p>
         ) : queries.length === 0 ? (
           <p>No queries yet.</p>
         ) : (
@@ -112,6 +103,7 @@ export default function ForumPage() {
           </div>
         )}
       </div>
+      <Footer />
     </main>
   );
 }

@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import Navbar from "../Navbar/Navbar";
 import { toast } from "sonner";
 import LoadingSpinner from "../LoadingSpinner/page";
+import Footer from "../Footer/Footer";
 
 declare global {
   interface Window {
@@ -247,6 +248,7 @@ export default function DonatePage() {
             </button>
           </div>
         </section>
+        <Footer />
       </main>
       
 

@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import ChatBot from '@/app/_components/Chatbot/ChatBot';
 import Navbar from "./_components/Navbar/Navbar";
 import { ImagesSlider } from "@/components/ui/images-slider";
+import Footer from "./_components/Footer/Footer";
 
 export default function LandingPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -126,14 +127,7 @@ export default function LandingPage() {
       {isLoggedIn && !loading && <ChatBot isLoggedIn={isLoggedIn} />}
 
       {/* Footer */}
-      <footer className="text-sm text-gray-500 text-center py-8 mt-10 border-t">
-        <div className="flex justify-center gap-6 mb-3">
-          <a href="#" className="hover:underline">Privacy Policy</a>
-          <a href="#" className="hover:underline">Terms of Service</a>
-          <a href="#" className="hover:underline">Contact Us</a>
-        </div>
-        <p>© 2024 Jeevan. All rights reserved.</p>
-      </footer>
+      <Footer />
     </main>
   );
 }

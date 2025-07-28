@@ -6,6 +6,7 @@ import RescueMap from "./RescueMapWrapper";
 import Navbar from "../Navbar/Navbar";
 import LoadingSpinnerInside from "../LoadingSpinnerInside/LoadingSpinnerInside";
 import { toast } from "sonner";
+import Footer from "../Footer/Footer";
 interface Report {
   _id: string;
   imageUrl: string;
@@ -194,6 +195,7 @@ const resolveReport = async (id: string) => {
           </div>
         )}
       </div>
+      <Footer />
     </main>
   );
 }

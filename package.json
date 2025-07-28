@@ -34,7 +34,7 @@
     "mongoose-aggregate-paginate": "^2.0.2",
     "mongoose-aggregate-paginate-v2": "^1.1.4",
     "mongoose-autopopulate": "^1.1.0",
-    "motion": "^12.23.9",
+    "motion": "^12.23.10",
     "multer": "^2.0.1",
     "next": "15.3.4",
     "next-connect": "^1.0.0",

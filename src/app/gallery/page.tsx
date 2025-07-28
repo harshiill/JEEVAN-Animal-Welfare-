@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Navbar from "@/app/_components/Navbar/Navbar";
 import { FocusCards } from "@/app/_components/ui/focus-cards";
 import LoadingSpinnerInside from "@/app/_components/LoadingSpinnerInside/LoadingSpinnerInside";
+import Footer from "../_components/Footer/Footer";
 
 export default function GalleryPage() {
   const [cards, setCards] = useState<{ src: string; title: string }[]>([]);
@@ -43,6 +44,7 @@ export default function GalleryPage() {
       ) : (
         <FocusCards cards={cards} />
       )}
+      <Footer />
     </main>
   );
 }

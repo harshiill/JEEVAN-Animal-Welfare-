@@ -8,6 +8,7 @@ import Navbar from "../Navbar/Navbar";
 import Link from "next/link";
 import { FileUpload } from "@/components/ui/file-upload";
 import { toast } from "sonner";
+import Footer from "../Footer/Footer";
 
 interface VetClinic {
   name: string;
@@ -264,14 +265,7 @@ export default function Model() {
       </div>
 
       {/* Footer */}
-      <footer className="text-sm text-gray-500 text-center py-6 border-t">
-        <div className="flex justify-center gap-6 mb-3">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms</a>
-          <a href="#">Contact</a>
-        </div>
-        <p>© 2024 Jeevan. All rights reserved.</p>
-      </footer>
+      <Footer />
     </main>
   );
 }

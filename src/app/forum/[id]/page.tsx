@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @next/next/no-img-element */
-/* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import Navbar from "@/app/_components/Navbar/Navbar";
-import { toast } from "sonner";
-import LoadingSpinnerInside from "@/app/_components/LoadingSpinnerInside/LoadingSpinnerInside";
+import { useParams } from 'next/navigation';
+import useSWR from 'swr';
+import { useState } from 'react';
+import Navbar from '@/app/_components/Navbar/Navbar';
+import Footer from '@/app/_components/Footer/Footer';
+import { toast } from 'sonner';
+import LoadingSpinnerInside from '@/app/_components/LoadingSpinnerInside/LoadingSpinnerInside';
 
 interface Query {
   _id: string;
@@ -29,84 +31,68 @@ interface Comment {
   createdAt: string;
 }
 
+// SWR fetcher
+const fetcher = (url: string) => fetch(url).then(res => res.json());
+
 export default function QueryDetailPage() {
   const { id } = useParams();
-  const [query, setQuery] = useState<Query | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [newComment, setNewComment] = useState("");
+  const [newComment, setNewComment] = useState('');
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(true);
 
-  const fetchQuery = async () => {
-    try {
-      const res = await fetch(`/api/query/${id}`);
-      const data = await res.json();
-      if (data.success) setQuery(data.data);
-    } catch (err) {
-      console.error("Failed to fetch query:", err);
-    }
-  };
+  // Fetch query
+  const {
+    data: queryData,
+    isLoading: queryLoading,
+    error: queryError,
+  } = useSWR(`/api/query/${id}`, fetcher);
 
-  const fetchComments = async () => {
-    try {
-      const res = await fetch(`/api/comment?queryId=${id}&page=${page}`);
-      const data = await res.json();
-      if (data.success) {
-        setComments(data.data.comments);
-        setTotalPages(data.data.totalPages);
-      }
-    } catch (err) {
-      console.error("Failed to fetch comments:", err);
-    }
-  };
+  // Fetch comments
+  const {
+    data: commentData,
+    isLoading: commentsLoading,
+    mutate: refreshComments,
+  } = useSWR(`/api/comment?queryId=${id}&page=${page}`, fetcher);
+
+  const query: Query | null = queryData?.data || null;
+  const comments: Comment[] = commentData?.data?.comments || [];
+  const totalPages: number = commentData?.data?.totalPages || 1;
 
   const handleAddComment = async () => {
     if (!newComment.trim()) return;
 
-    const res = await fetch("/api/comment", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    const res = await fetch('/api/comment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ queryId: id, content: newComment }),
     });
 
-    if (res.ok) { 
-      toast.success("Comment added successfully");
-      setNewComment("");
-      fetchComments();
-     
+    if (res.ok) {
+      toast.success('Comment added successfully');
+      setNewComment('');
+      refreshComments(); // SWR revalidate
     } else {
-      toast.error("Failed to add comment");
+      toast.error('Failed to add comment');
     }
   };
 
-  useEffect(() => {
-    setLoading(true);
-    Promise.all([fetchQuery(), fetchComments()]).finally(() =>
-      setLoading(false)
-    );
-  }, []);
-
-  useEffect(() => {
-    setLoading(true);
-    fetchComments().finally(() => setLoading(false));
-  }, [page]);
-
   return (
-    <main className="min-h-screen bg-white text-black font-sans relative">
+    <main className="min-h-screen bg-white text-black font-sans relative flex flex-col justify-between">
       <Navbar />
-      {loading && <LoadingSpinnerInside title="Comments" />}
+
+      {(queryLoading || commentsLoading) && <LoadingSpinnerInside title="Comments" />}
 
       <div
-        className={`max-w-4xl mx-auto p-6 transition-opacity ${
-          loading ? "opacity-20 pointer-events-none select-none" : "opacity-100"
+        className={`max-w-4xl mx-auto p-6 grow transition-opacity ${
+          queryLoading || commentsLoading
+            ? 'opacity-20 pointer-events-none select-none'
+            : 'opacity-100'
         }`}
       >
         {query && (
           <div className="bg-gray-100 p-4 rounded shadow mb-6">
             <div className="flex items-center gap-2 mb-2">
               <img
-                src={query.owner?.profilePicture || "/user.png"}
+                src={query.owner?.profilePicture || '/user.png'}
                 className="w-8 h-8 rounded-full"
                 alt="owner"
               />
@@ -124,13 +110,10 @@ export default function QueryDetailPage() {
           <h2 className="text-lg font-semibold mb-2">Comments</h2>
           <div className="space-y-4">
             {comments.map((comment) => (
-              <div
-                key={comment._id}
-                className="border rounded p-3 bg-gray-50"
-              >
+              <div key={comment._id} className="border rounded p-3 bg-gray-50">
                 <div className="flex items-center gap-2 mb-1">
                   <img
-                    src={comment.owner?.profilePicture || "/user.png"}
+                    src={comment.owner?.profilePicture || '/user.png'}
                     className="w-6 h-6 rounded-full"
                     alt="user"
                   />
@@ -144,7 +127,7 @@ export default function QueryDetailPage() {
             ))}
           </div>
 
-          {/* Pagination Controls */}
+          {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex justify-center mt-4 space-x-2">
               <button
@@ -185,6 +168,8 @@ export default function QueryDetailPage() {
           </button>
         </div>
       </div>
+
+      <Footer />
     </main>
   );
 }

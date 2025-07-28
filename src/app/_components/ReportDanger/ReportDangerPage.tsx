@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Navbar from "../Navbar/Navbar";
 import { toast } from "sonner";
 import { FileUpload } from "@/components/ui/file-upload";
+import Footer from "../Footer/Footer";
 
 export default function ReportDangerPage() {
   const [typeOfAnimal, setTypeOfAnimal] = useState("");
@@ -145,6 +146,7 @@ export default function ReportDangerPage() {
           </button>
         </form>
       </div>
+      <Footer />
     </main>
   );
 }
