@@ -1,28 +1,26 @@
 
 # 🐾 Jeevan - Animal Welfare App
 
-An AI-powered platform for image-based animal disease detection and real-time reporting of injured or stray animals. Built with **Next.js**, **MongoDB**, **Cloudinary**, and **Zod**.
+**Jeevan** is an AI-powered web platform that enables users to **detect animal diseases from images** and **report stray or injured animals** in real-time. Built using modern tools like **Next.js**, **MongoDB**, and **Cloudinary**, it also supports **donations**, **location tracking**, and **automated email alerts**.
 
 ---
 
 ## 📦 Tech Stack
 
-- **Next.js** (App Router, TypeScript, Tailwind CSS)
-- **MongoDB Atlas** with Mongoose
-- **Cloudinary** for image uploads
-- **Zod** for schema validation
-- **bcryptjs** for password hashing
-- **Multer** for image upload handling
-- **JWT** for token creation & verification during login,logout..
-- **Firebase FCM**, **Socket.IO** (real-time and notifications - planned)
+- **Frontend**: Next.js (App Router, TypeScript, Tailwind CSS)
+- **Backend**: Node.js (API Routes via App Router)
+- **Database**: MongoDB Atlas + Mongoose
+- **Image Handling**: Cloudinary
+- **Validation**: Zod
+- **Authentication**: JWT, bcryptjs
+- **Email**: Resend, Nodemailer
+- **Payments**: Razorpay
+- **Maps & Geolocation**: Mapbox
+- **UI**: Accentrity UI, Tailwind, Lucide
 
 ---
 
 ## 🚀 Initial Setup Guide
-
-Follow these steps to set up the project locally.
-
----
 
 ### 1. 📁 Create Project Folder
 
@@ -33,7 +31,7 @@ cd jeevan
 
 ---
 
-### 2. 🧱 Scaffold the Project (Next.js)
+### 2. 🧱 Scaffold the Project with Next.js
 
 ```bash
 npx create-next-app@latest .
@@ -56,42 +54,70 @@ Answer prompts as follows:
 ### 3. 📦 Install Dependencies
 
 ```bash
-npm install mongoose cloudinary dotenv zod bcryptjs multer jsonwebtoken
+npm install mongoose cloudinary dotenv zod bcryptjs multer jsonwebtoken nodemailer razorpay mapbox-gl @barba/core @fortawesome/react-fontawesome @fortawesome/free-solid-svg-icons @tabler/icons-react axios clsx formidable leaflet react-leaflet lottie-react lucide-react next-connect next-themes resend swr tailwind-merge tw-elements yet-another-react-lightbox jwt-decode
 ```
 
 ---
 
 ### 4. 🔐 Setup Environment Variables
 
-Create a `.env.` file in the root based on the sample:
+Create your `.env` file from the sample:
 
 ```bash
 cp .env.sample .env
+# On Windows (PowerShell):
+# copy .env.sample .env
 ```
 
-#### Example `.env.sample` contents:
-```
+#### Example `.env.sample`
+
+```env
 MONGO_URI=
 TOKEN_SECRET=
-DOMAIN=http://localhost:3000
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_secret
+DOMAIN=
+
+RESEND_API_KEY=
+
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+
+EMAIL_FROM=
+PASS=
+
+RAZORPAY_KEY_ID=your_key_id
+RAZORPAY_KEY_SECRET=your_key_secret
+
+NEXT_PUBLIC_RAZORPAY_KEY_ID=
+
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=
+
+NEXT_PUBLIC_MAPBOX_TOKEN=
+
+OPENROUTER_API_KEY=
 ```
+
+> 💡 You’ll need to get credentials from:
+> - [Cloudinary](https://cloudinary.com/)
+> - [Mapbox](https://account.mapbox.com/)
+> - [Razorpay](https://razorpay.com/)
+> - [Resend](https://resend.com/)
+> - [OpenRouter](https://openrouter.ai/)
 
 ---
 
 ### 5. 🧠 Project Structure (Basic)
 
-```
+```bash
 /src
-  ├── /app
-  ├── /components
-  ├── /lib        # db.ts, cloudinary.ts
-  ├── /models     # mongoose schemas
-  ├── /middleware.ts        # Middleware
-  ├── /helpers       # utils
-  ├── /Schemas       # ZOD Schema Validations
+  ├── /app              # Pages and API route handlers
+  ├── /components       # UI components
+  ├── /lib              # db.ts, cloudinary.ts, resend.ts
+  ├── /models           # Mongoose schemas
+  ├── /middleware.ts    # JWT & auth middleware
+  ├── /helpers          # Utility functions
+  ├── /Schemas          # Zod validation schemas
 .env
 .env.sample
 ```
@@ -104,17 +130,27 @@ CLOUDINARY_API_SECRET=your_secret
 npm run dev
 ```
 
-Visit `http://localhost:3000`
+Visit `http://localhost:3000` in your browser.
 
 ---
 
+## 🧪 Useful Scripts
+
+```bash
+npm run dev     # Start local server
+npm run build   # Production build
+npm run lint    # Run ESLint
+```
+
+---
 
 ## 🤝 Contributing
 
-Pull requests welcome! If you're looking to contribute, please fork the repo and open a PR.
+Pull requests welcome!  
+Please fork the repo, make your changes, and submit a PR.
 
 ---
 
 ## 📄 License
 
-IIITDMJ © 2025 Jeevan Project
+**IIITDMJ © 2025 Jeevan Project** — All rights reserved.
