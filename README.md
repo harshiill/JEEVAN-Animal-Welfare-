@@ -1,4 +1,9 @@
 
+## 🎥 JEEVAN
+
+[![Watch Demo](./public/Jeevab.png)](https://youtu.be/EW08L0LwFdU)
+
+
 # 🐾 Jeevan - Animal Welfare App
 
 **Jeevan** is an AI-powered web platform that enables users to **detect animal diseases from images** and **report stray or injured animals** in real-time. Built using modern tools like **Next.js**, **MongoDB**, and **Cloudinary**, it also supports **donations**, **location tracking**, and **automated email alerts**.
@@ -154,3 +159,4 @@ Please fork the repo, make your changes, and submit a PR.
 ## 📄 License
 
 **IIITDMJ © 2025 Jeevan Project** — All rights reserved.
+
