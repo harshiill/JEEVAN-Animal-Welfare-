@@ -1,5 +1,5 @@
 
-## 🎥 JEEVAN
+## 🎥 JEEVAN DEMO VIDEO
 
 [![Watch Demo](./public/Jeevan.png)](https://youtu.be/EW08L0LwFdU)
 
