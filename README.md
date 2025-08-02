@@ -1,7 +1,7 @@
 
 ## 🎥 JEEVAN
 
-[![Watch Demo](./public/Jeevab.png)](https://youtu.be/EW08L0LwFdU)
+[![Watch Demo](./public/Jeevan.png)](https://youtu.be/EW08L0LwFdU)
 
 
 # 🐾 Jeevan - Animal Welfare App
