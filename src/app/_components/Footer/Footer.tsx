@@ -25,10 +25,10 @@ const people = [
   },
   {
     id: 4,
-    name: "Krishna Chouhan",
+    name: "Krishan Veer Singh",
     designation: "IIIT Jabalpur - CSE '27",
     image:
-      "/Krishna.jpg",
+      "/Krishna.jpeg",
   },
   {
     id: 5,
