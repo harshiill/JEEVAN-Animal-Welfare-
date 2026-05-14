@@ -2,37 +2,18 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import ChatBot from '@/app/_components/Chatbot/ChatBot';
 import Navbar from "./_components/Navbar/Navbar";
 import { ImagesSlider } from "@/components/ui/images-slider";
 import Footer from "./_components/Footer/Footer";
 
 export default function LandingPage() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  useEffect(() => {
-    const checkLogin = async () => {
-      try {
-        const res = await fetch("/api/isLoggedIn", { credentials: "include" });
-        const data = await res.json();
-        if (data?.isLoggedIn) setIsLoggedIn(true);
-      } catch (err) {
-        console.error("Login check failed", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    checkLogin();
-  }, []);
-
-  const handleGetStarted = () => router.push(isLoggedIn ? "/Model" : "/login");
-  const handleVolunteer = () => router.push(isLoggedIn ? "/reportdanger" : "/login");
-  const handleFeatureClick = (href: string) => router.push(isLoggedIn ? href : "/login");
+  const handleGetStarted = () => router.push("/Model");
+  const handleVolunteer = () => router.push("/reportdanger");
+  const handleFeatureClick = (href: string) => router.push(href);
 
   const images = ["/Dog1.jpg", "/Dog2.jpg", "/Dog3.jpg", "/Dog4.jpg", "/Dog5.jpg"];
 
@@ -122,9 +103,6 @@ export default function LandingPage() {
           Become a Volunteer
         </button>
       </section>
-
-      {/* Chatbot */}
-      {isLoggedIn && !loading && <ChatBot isLoggedIn={isLoggedIn} />}
 
       {/* Footer */}
       <Footer />

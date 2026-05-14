@@ -1,39 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import useSWR from "swr";
-import { useCallback, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
-const fetcher = (url: string) =>
-  fetch(url, { credentials: "include" }).then((res) => res.json());
-
 export default function Navbar() {
-  const router = useRouter();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const { data, isLoading } = useSWR("/api/isLoggedIn", fetcher);
-  const isLoggedIn = data?.isLoggedIn;
-  const userName = data?.name;
-
-  const handleLogout = useCallback(async () => {
-    try {
-      const res = await fetch("/api/logout", {
-        method: "GET",
-        credentials: "include",
-      });
-
-      if (res.ok) {
-        router.push("/login");
-      } else {
-        console.error("Logout failed.");
-      }
-    } catch (err) {
-      console.error("Logout error:", err);
-    }
-  }, [router]);
 
   const navLinkClass = (href: string) =>
     pathname === href
@@ -59,39 +33,21 @@ export default function Navbar() {
       {/* Desktop Nav */}
       <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
         <Link href="/" className={navLinkClass("/")}>Home</Link>
-
-        {!isLoading && isLoggedIn ? (
-          <>
-            {links.map(({ href, label }) => (
-              <Link key={href} href={href} className={navLinkClass(href)}>
-                {label}
-              </Link>
-            ))}
-            <Link href="/donation">
-              <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-full font-medium">
-                Donate
-              </button>
-            </Link>
-            <Link href="/profile" className="ml-2">
-              {userName && (
-                <span className="text-emerald-600 font-semibold">
-                  Hi, {userName}
-                </span>
-              )}
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="text-red-500 hover:underline ml-4"
-            >
-              Logout
-            </button>
-          </>
-        ) : (
-          <>
-            <Link href="/login" className={navLinkClass("/login")}>Login</Link>
-            <Link href="/signup" className={navLinkClass("/signup")}>Signup</Link>
-          </>
-        )}
+        {links.map(({ href, label }) => (
+          <Link key={href} href={href} className={navLinkClass(href)}>
+            {label}
+          </Link>
+        ))}
+        <Link href="/donation">
+          <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-full font-medium">
+            Donate
+          </button>
+        </Link>
+        <Link href="/profile" className="ml-2">
+          <span className="text-emerald-600 font-semibold">
+            Profile
+          </span>
+        </Link>
       </nav>
 
       {/* Mobile Menu Button */}
@@ -107,45 +63,26 @@ export default function Navbar() {
       {mobileMenuOpen && (
         <div className="absolute top-16 left-0 w-full bg-white shadow-lg z-40 flex flex-col gap-4 p-6 md:hidden transition-all">
           <Link href="/" className={navLinkClass("/")}>Home</Link>
-
-          {!isLoading && isLoggedIn ? (
-            <>
-              {links.map(({ href, label }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className={navLinkClass(href)}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {label}
-                </Link>
-              ))}
-              <Link href="/donation">
-                <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-full w-full mt-2">
-                  Donate
-                </button>
-              </Link>
-              <Link href="/profile" onClick={() => setMobileMenuOpen(false)}>
-                <span className="text-emerald-600 font-semibold">
-                  Hi, {userName}
-                </span>
-              </Link>
-              <button
-                onClick={() => {
-                  handleLogout();
-                  setMobileMenuOpen(false);
-                }}
-                className="text-red-500 hover:underline"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link href="/login" className={navLinkClass("/login")}>Login</Link>
-              <Link href="/signup" className={navLinkClass("/signup")}>Signup</Link>
-            </>
-          )}
+          {links.map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              className={navLinkClass(href)}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {label}
+            </Link>
+          ))}
+          <Link href="/donation">
+            <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-full w-full mt-2">
+              Donate
+            </button>
+          </Link>
+          <Link href="/profile" onClick={() => setMobileMenuOpen(false)}>
+            <span className="text-emerald-600 font-semibold">
+              Profile
+            </span>
+          </Link>
         </div>
       )}
     </header>

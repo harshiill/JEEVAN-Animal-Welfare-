@@ -21,6 +21,7 @@
 - **Email**: Resend, Nodemailer
 - **Payments**: Razorpay
 - **Maps & Geolocation**: Mapbox
+- **ML Model**: Dog Disease Prediction API (deployed on [Render](https://render.com/))
 - **UI**: Accentrity UI, Tailwind, Lucide
 
 ---
@@ -129,7 +130,23 @@ OPENROUTER_API_KEY=
 
 ---
 
-### 6. ✅ Run Development Server
+### 6. 🤖 Wake Up the ML Model (Important!)
+
+The dog disease prediction model is deployed on **Render's free tier**, which **spins down after inactivity**. You **must** wake it up before using the Predict feature.
+
+1. Open this URL in your browser:
+   ```
+   https://dog-disease-api.onrender.com/
+   ```
+2. Wait until you see a response (this can take **1–2 minutes** on first load).
+3. Once the API is awake, the Predict feature in the app will work correctly.
+
+> [!WARNING]
+> If you skip this step, the AI Diagnosis / Predict page will fail to return results. The Render free tier puts the service to sleep after ~15 minutes of inactivity, so you may need to repeat this step if the model has been idle.
+
+---
+
+### 7. ✅ Run Development Server
 
 ```bash
 npm run dev
